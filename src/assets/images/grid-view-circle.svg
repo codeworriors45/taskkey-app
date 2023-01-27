@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <filter id="Ellipse_441" x="0" y="0" width="64" height="64" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Component_143" data-name="Component 143" transform="translate(24 21)">
+    <g transform="matrix(1, 0, 0, 1, -24, -21)" filter="url(#Ellipse_441)">
+      <circle id="Ellipse_441-2" data-name="Ellipse 441" cx="23" cy="23" r="23" transform="translate(9 6)" fill="#fff"/>
+    </g>
+    <g id="Group_1855" data-name="Group 1855" transform="translate(22685 2364)">
+      <rect id="Rectangle_1195" data-name="Rectangle 1195" width="4" height="4" transform="translate(-22685 -2364)" fill="#294658"/>
+      <rect id="Rectangle_1200" data-name="Rectangle 1200" width="4" height="4" transform="translate(-22679 -2364)" fill="#294658"/>
+      <rect id="Rectangle_1203" data-name="Rectangle 1203" width="4" height="4" transform="translate(-22673 -2364)" fill="#294658"/>
+      <rect id="Rectangle_1196" data-name="Rectangle 1196" width="4" height="4" transform="translate(-22685 -2358)" fill="#294658"/>
+      <rect id="Rectangle_1198" data-name="Rectangle 1198" width="4" height="4" transform="translate(-22679 -2358)" fill="#294658"/>
+      <rect id="Rectangle_1201" data-name="Rectangle 1201" width="4" height="4" transform="translate(-22673 -2358)" fill="#294658"/>
+      <rect id="Rectangle_1197" data-name="Rectangle 1197" width="4" height="4" transform="translate(-22685 -2352)" fill="#294658"/>
+      <rect id="Rectangle_1199" data-name="Rectangle 1199" width="4" height="4" transform="translate(-22679 -2352)" fill="#294658"/>
+      <rect id="Rectangle_1202" data-name="Rectangle 1202" width="4" height="4" transform="translate(-22673 -2352)" fill="#294658"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,25 @@
+<div class="grid-view">
+    <app-side-menu class="side-menu" [ngClass]="{'hide': menuClosed}"></app-side-menu>
+    <div class="page-container-outer">
+        <app-header class="app-navbar"></app-header>
+        <div class="page-container">
+            <router-outlet></router-outlet>
+
+            <!-- <div class="footer">App footer <span>Link</span></div> -->
+        </div>
+        
+        <!-- <div class="chat-float" (click)="operateChatBox()">
+            <div class="count">
+                {{totalChatsUnreaded}}
+            </div>
+            <img src="assets/images/chat_button.svg">
+        </div> -->
+        <div class="chat-box" *ngIf="chatBoxViewer">
+            <app-chat-box (stateChange)="applyStateChange($event)"></app-chat-box>
+        </div>
+        <div class="notification-box" *ngIf="showNotificationBox" (click)="closeNotificationPopup()">
+            <app-notification [newNotification]="newNotification" (click)="$event.stopPropagation()"></app-notification>
+        </div>
+    </div>
+</div>
+

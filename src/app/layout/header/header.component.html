@@ -1,0 +1,65 @@
+<div class="brand-logo navbar-light">
+    <img src="assets/images/taskkey.png" class="logo" alt="taskkeylogo">
+    <!-- <button class="navbar-toggler menu-toogle-btn" type="button" (click)="toogleSideMenu()">
+        <span class="navbar-toggler-icon"></span>
+    </button> -->
+</div>
+<div class="app-tabs">
+    <div class="app-tab-item" (click)="navigateToDashBoard()" [ngClass]="{'active':isDashboardView}">
+        <i class="fa fa-clone"></i>
+    </div>
+    <!-- <div class="app-tab-item">
+        <i class="fa fa-archive"></i>
+    </div> -->
+    <div class="app-tab-item" (click)="navigateToPlanner()" [ngClass]="{'active':isPlannerView}">
+        <i class="far fa-calendar-minus"></i>
+    </div>
+    <div class="app-tab-item" (click)="operateChatBox()" [ngClass]="{'active':chatBoxOpened}">
+        <div *ngIf="totalChatsUnreaded > 0" class="count">
+            {{totalChatsUnreaded}}
+        </div>
+        <i class="far fa-comment-dots"></i>
+    </div>
+    <div class="app-tab-item" (click)="navigateToArchive()" [ngClass]="{'active':isArchiveViewActive}">
+        <i class="fa fa-archive"></i>
+    </div>
+    <div class="app-tab-item" (click)="toggleNotificationBoxView()" [ngClass]="{'active':showNotificationBox}">
+        <div *ngIf="newNotification>0" class="count">
+            {{newNotification}}
+        </div>
+        <i class="far fa-bell"></i>
+    </div>
+</div>
+<div *ngIf="isDashboardView" class="right-btns-wrapper">
+    <!--<button type="button" tooltip="Create Card" class="btn btn-outline-primary create-card-btn" (click)="openCreateCardPopup()"><i class="fa fa-plus"></i></button>-->
+    <label class="switch">
+        <input type="checkbox" [(ngModel)]="isOnline" (change)="toogleUserState()">
+        <span class="slider round"></span>
+    </label>
+    <button type="button" class="btn btn-sm btn-primary create-card-btn" (click)="openCreateCardPopup()"><i class="fa fa-plus"></i>Create Card</button>
+    <div class="btn-group sagment-btns" btnRadioGroup [(ngModel)]="filterOption">
+        <label class="btn btn-sm btn-outline-primary" (click)="toogleCards()" btnRadio="active">Active</label>
+        <label class="btn btn-sm btn-outline-primary" (click)="toogleCards()" btnRadio="new" [ngClass]="{'isNewCard': newCardCount > 0}">New</label>
+    </div>
+</div>
+<div class="right-menu-items" dropdown>
+    <!-- <div class="notification-icon-badge">
+        <i class="icon fa fa-bell"></i>
+        <div class="badge">2</div>
+    </div> -->
+    <div class="acrony-name-icon btn-group" dropdownToggle>
+        <img class="acrony-image" *ngIf="imguser" appImgFallback="assets/images/user1.svg" [acrony]="acronyName" [src]="imguser">
+        <i class="icon fa fa-chevron-down"></i>
+
+        <div class="menu-items dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu>
+            <div role="menuitem" class="menu-item">
+                <div class="icon fa fa-cog"></div>
+                <div class="text" (click)="openModalWithComponent()">Settings</div>
+            </div>
+            <div role="menuitem" class="menu-item">
+                <div class="icon fa fa-sign-out-alt"></div>
+                <div class="text" (click)="logOut()">Log Out</div>
+            </div>
+        </div>
+    </div>
+</div>

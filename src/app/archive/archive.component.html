@@ -1,0 +1,48 @@
+<div class="row">
+    <div class="search-area">
+        <div class="col-md-4 archive-search">
+            <div class="search-area">
+                <img class="search-icon" src="assets/images/small_search_symbol.svg">
+                <input class="search" id="chatName" placeholder="Search Archive" type="text" autocomplete="off" (keyup)="onKeyUp($event)" (keydown)="onKeyDown()"/>
+                <div *ngIf="searchLoader" class="spin_border">
+                    <div class="spinners">
+                      <div class="spinner_circle">
+                        <div></div>
+                      </div>
+                    </div>
+                </div>
+            </div>   
+        </div>
+    </div>
+    
+    <div class="row grid-container col-12">
+        <div class="" *ngFor="let card of archiveCards">
+            <div class="c-body border-bottom">
+                <div class="circle">
+                    <i *ngIf="card.callToAction && filterOption=='active'" class="fa fa-bell icon"></i>
+                    <img *ngIf="card.image && !card.callToAction && filterOption=='active'" [src]="card.image">
+                    <span *ngIf="filterOption=='new'">{{card.acronymName}}</span>
+                </div>
+                <div class="title">{{card.name}}</div>
+                <div class="unarchive-btn" (click)="unarchiveCard(card)">
+                    Unarchive
+                </div>
+                
+            </div>
+            <div class="c-footer">
+                <div *ngIf="card.id!=projectId" class="suscribers">
+                    <img *ngFor="let participant of card.participants | keyvalue | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">
+                    <div *ngIf="card.totalParticipants > 3" class="counter">
+                        + {{card.totalParticipants - 3}} <span>others</span>
+                    </div>
+                </div>
+                <div class="timeline">
+                    {{ card.completed }}
+                </div>
+            </div>
+    
+        </div>
+    
+        
+      </div>
+</div>

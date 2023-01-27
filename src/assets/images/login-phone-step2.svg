@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="72" height="120" viewBox="0 0 72 120">
+  <g id="Group_3947" data-name="Group 3947" transform="translate(-160.997 -198)">
+    <g id="Group_3451" data-name="Group 3451" transform="translate(160.997 198)">
+      <g id="Group_3450" data-name="Group 3450" transform="translate(0 0)">
+        <g id="Group_3285" data-name="Group 3285" transform="translate(0 0)">
+          <g id="Group_3277" data-name="Group 3277" transform="translate(0 0)">
+            <path id="Path_3375" data-name="Path 3375" d="M78.794,8.6H29.806C23.519,8.6,18.3,14.642,18.3,22.089v93.021c0,7.447,5.1,13.489,11.506,13.489H78.794c6.287,0,11.506-6.042,11.506-13.489V22.089C90.3,14.642,85.2,8.6,78.794,8.6Zm7.947,106.511c0,5.2-3.558,9.274-7.947,9.274H29.806c-4.389,0-7.947-4.215-7.947-9.274V22.089c0-5.2,3.558-9.274,7.947-9.274H78.794c4.389,0,7.947,4.215,7.947,9.274Z" transform="translate(-18.3 -8.6)" fill="#294658"/>
+            <path id="Path_3376" data-name="Path 3376" d="M72.534,18.1H36.866a2.141,2.141,0,0,0-2.166,2,2.141,2.141,0,0,0,2.166,2H72.534a2.141,2.141,0,0,0,2.166-2A2.141,2.141,0,0,0,72.534,18.1Z" transform="translate(-18.697 -4.767)" fill="#294658"/>
+            <path id="Path_3377" data-name="Path 3377" d="M50.267,75.4A6.72,6.72,0,0,0,43.6,82.134a6.348,6.348,0,0,0,2,4.714,6.628,6.628,0,0,0,4.667,1.886h0A6.72,6.72,0,0,0,56.933,82,6.606,6.606,0,0,0,50.267,75.4Zm.133,9.428h0a2.62,2.62,0,0,1-1.867-.808A2.672,2.672,0,0,1,50.4,79.44h0a2.694,2.694,0,0,1,0,5.387Z" transform="translate(-14.263 19.266)" fill="#294658"/>
+          </g>
+          <g id="ic_navbar_planner-on" transform="translate(20.67 38.651)">
+            <g id="Group_3452" data-name="Group 3452" transform="translate(0)">
+              <g id="Ellipse_441" data-name="Ellipse 441" fill="#294658" stroke="#294658" stroke-width="2">
+                <circle cx="15.333" cy="15.333" r="15.333" stroke="none"/>
+                <circle cx="15.333" cy="15.333" r="14.333" fill="none"/>
+              </g>
+              <path id="Icon_feather-check" data-name="Icon feather-check" d="M19.671,9l-9.4,9.114L6,13.971" transform="translate(2.115 2.432)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

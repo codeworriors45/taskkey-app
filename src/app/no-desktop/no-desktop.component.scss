@@ -1,0 +1,81 @@
+@import '~src/themes/variables.scss';
+
+@media only screen and (max-width: 600px) {
+    .nodesk-container{
+        .bg-wrapper {
+            .logo-container {
+                img {
+                    max-width: 150px;
+                }
+            }
+            .text-container {
+                font-size: 15px;
+            }
+            .store-wrapper {
+                img {
+                    max-width: 100px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .nodesk-container{
+        .bg-wrapper {
+            .logo-container {
+                img {
+                    min-width: 370px;
+                }
+            }
+            .text-container {
+                font-size: 25px;
+            }
+            .store-wrapper {
+                img {
+                    max-width: 180px;
+                }
+            }
+        }
+    }
+}
+
+.nodesk-container {
+    height: 100%;
+    background-color: #fff;
+
+    .bg-wrapper {
+        padding-right: 0;
+        background: url("../../assets/images/login-bg.svg");
+        background-color: #DFE7EB;
+        background-size:cover;
+
+        .logo-container {
+          display: table;
+          height: 100px;
+          width: 100px;
+          margin: 0 auto;
+          text-align: center;
+
+          img {
+            display:table-cell;
+            vertical-align:middle;
+            margin-top: 30%;
+          }
+        }
+
+        .text-container {
+            font-family: "Futura PT";
+            color: $primary;
+
+            .instuction-text {
+                text-align: center;
+            }
+        }
+
+        .store-wrapper {
+            display: flex;
+            justify-content: space-evenly;
+        }
+    }
+}

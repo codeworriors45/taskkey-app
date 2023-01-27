@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Icon_feather-smile" data-name="Icon feather-smile" transform="translate(-3 -3)">
+    <g id="Path_2969" data-name="Path 2969" transform="translate(0 0)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M27,15A12,12,0,1,1,15,3,12,12,0,0,1,27,15Z" stroke="none"/>
+      <path d="M 15.00000095367432 5.000001907348633 C 9.485980987548828 5.000001907348633 5.000001907348633 9.485980987548828 5.000001907348633 15.00000095367432 C 5.000001907348633 20.5140209197998 9.485980987548828 25 15.00000095367432 25 C 20.5140209197998 25 25 20.5140209197998 25 15.00000095367432 C 25 9.485980987548828 20.5140209197998 5.000001907348633 15.00000095367432 5.000001907348633 M 15.00000095367432 3.000001907348633 C 21.62742233276367 3.000001907348633 27 8.372581481933594 27 15.00000095367432 C 27 21.62742233276367 21.62742233276367 27 15.00000095367432 27 C 8.372581481933594 27 3.000001907348633 21.62742233276367 3.000001907348633 15.00000095367432 C 3.000001907348633 8.372581481933594 8.372581481933594 3.000001907348633 15.00000095367432 3.000001907348633 Z" stroke="none" fill="#294658"/>
+    </g>
+    <path id="Path_2970" data-name="Path 2970" d="M12,21a6.479,6.479,0,0,0,4.8,2.4A6.479,6.479,0,0,0,21.6,21" transform="translate(-1.8 -3.6)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_2971" data-name="Path 2971" d="M13.5,13.5h.012" transform="translate(-2.1 -2.1)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+    <path id="Path_2972" data-name="Path 2972" d="M22.5,13.5h.012" transform="translate(-3.9 -2.1)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+  </g>
+</svg>

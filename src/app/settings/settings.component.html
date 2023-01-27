@@ -1,0 +1,152 @@
+<div class="modal-body row">
+    <div class="col-md-3 border-right">
+        <div role="header" class="heading">
+            <div class="icon fa fa-cog"></div>
+            <div class="heading-item">Settings</div>
+        </div>
+        <ul class="tab-items">
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[0]}">
+                <div class="text" id="userprofile" (click)="populateSettingsScreen($event)">User Profile</div>
+            </li>
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[1]}">
+                <div class="text" id="abouttaskkey" (click)="populateSettingsScreen($event)">About Taskkey</div>
+            </li>
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[2]}">
+                <div class="text" id="contactus" (click)="populateSettingsScreen($event)">Contact Us</div>
+            </li>
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[3]}">
+                <div class="text" id="privacypolicy" (click)="populateSettingsScreen($event)">Privacy Policy</div>
+            </li>
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[4]}">
+                <div class="text" id="termsofuse" (click)="populateSettingsScreen($event)">Terms Of Use</div>
+            </li>
+        </ul>
+        
+    </div>
+    <div class="col-md-9">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closePopupAndRemoveParamFromURL()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div *ngIf="screenSwitchArray[0]">
+        <form [formGroup]="profileForm">
+            <div class="image-area">
+                <div class="row input-row">
+                    <img class="user-image" [src]="fbImageUrl ? fbImageUrl : defaultImage">
+                    <div *ngIf="profilePicLoader" class="spin_border">
+                        <div class="spinners">
+                          <div class="spinner_circle">
+                            <div></div>
+                          </div>
+                        </div>
+                    </div>
+                    <div>
+                        <img class="edit-pencil" src="assets/images/edit_pencil.svg" (click)="fileInput.click()">
+                        <input #fileInput type="file" style="width: 30px; display: none;" (change)="uploadProfilePicture($event)"/>
+                    </div>
+                </div>
+             </div>
+             <div class="details-area">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-input-wrapper">
+                            <label class="label label-required">First Name</label><br>
+                            <input class="input-field" type="text" formControlName="firstName"/>
+                        </div>
+                        <div class="error-message" *ngIf="profileForm.controls.firstName.errors?.required">
+                            First Name is required.
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-input-wrapper">
+                            <label class="label">Last Name</label><br>
+                            <input class="input-field" id="last-name" type="text" formControlName="lastName"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                   <div class="col-8">
+                       <div class="form-input-wrapper">
+                            <label class="label">Email Address (optional)</label><br>
+                            <input class="input-field" id="email" type="email" formControlName="email"/>
+                       </div>
+                       <div class="error-message" *ngIf="profileForm.controls.email.errors?.email">
+                             Email Address is not valid.
+                       </div>
+                   </div>
+                </div>
+                <div class="row">
+                   <div class="col-8">
+                       <div class="form-input-wrapper">
+                           <label class="label">Registered Phone Number</label><br>
+                           <input class="input-field disabled" id="phone" type="text" placeholder="+1 250-555-0199" formControlName="phone"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <label class="form-notes">Required Fields</label><br>
+                    </div>
+                </div>
+                <div class="row">
+                   <div class="col-8">
+                       <div class="form-input-wrapper" style="display: flex; align-items: flex-end;">
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="toggel-label">Push Notifications</label><br>
+                       </div>
+                   </div>
+                </div>
+                <div class="row">
+                    <div class="col-8">
+                        <button class="update-button" type="button" (click)="saveProfile()">Update</button>
+                    </div>
+                </div>
+             </div> 
+        </form>
+        </div>
+        <div class="taskkey-about" *ngIf="screenSwitchArray[1]">
+            <div class="content-about">
+                <div class="row content-left">
+                    <div class="col-8">
+                        <label class="head-lable">About</label><br>
+                        <img class="head-img" src="assets/images/about-taskkey.svg" alt="taskkeylogo">
+                    </div>
+    
+                </div>
+    
+                <div class="row content-left">
+                    <div class="col-10">
+                        Taskkey is a task management application developed by IBG.
+                    </div>
+                    <div class="col-11">
+                        It’s a platform for those who enjoy life’s simplest joys while being organized and  productive. 
+                    </div>
+                    <div class="col-11">
+                        So, Wanna throw a “Surprise birthday party” for your loved one/friend? Just create a Card and start planning the most amazing party in town! 
+                    </div>
+                    <div class="col-11">
+                        Or Have a “Deadline to catch” for that Marketing pitch? Assign and manage all your team tasks and win over that client like a Champ!
+                    </div>
+                    <div class="col-11">
+                        Follow us on:
+                    </div>
+                    <div class="col-11">
+                        <img class="social-icon" src="assets/images/icon-facebook.svg" alt="taskkeylogo">
+                        <img class="social-icon" src="assets/images/icon-twitter.svg" alt="taskkeylogo">
+                        <img class="social-icon" src="assets/images/icon-instagram.svg" alt="taskkeylogo">
+                        <img class="social-icon" src="assets/images/icon-linkedin.svg" alt="taskkeylogo">
+                    </div>
+                </div> 
+            </div>
+            <div>
+                <div class="col-12">
+                    <img class="bottom-img" src="assets/images/about-bot.svg" alt="taskkeylogo">
+                </div>
+            </div> 
+        </div>
+    </div>
+
+    
+</div>

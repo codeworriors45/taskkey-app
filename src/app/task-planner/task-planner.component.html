@@ -1,0 +1,325 @@
+<div class="page-content">
+    <div class="page-title">
+        Planner View
+    </div>
+    <div class="content-wrapper detail-container row">
+        <div class="col-auto left-panel">
+            <div class="panel-header">
+                <div class="title-wrapper">
+                    <div class="title">{{currentDate | date: 'd MMMM YYYY'}}</div>
+                    <!--<i class="fa fa-plus add-new-btn" (click)="startCreateEvent()"></i>-->
+                </div>
+                <div class="col short-filter-wrapper">
+                    <div dropdown [ngClass]="{'sort-applied': sortBy!=''}">
+                        <div class="shorting-wrapper">
+                            <i class="fa fa-sort static-icon" (click)="toogleSortOrder()"></i>
+                            <div dropdownToggle>
+                                <div *ngIf="sortBy=='dueDate' || sortBy==''" class="text-static">Sort: Due Date</div>
+                                <div *ngIf="sortBy=='createdBy'" class="text-static">Sort: Created At</div>
+                                <div *ngIf="sortBy=='status'" class="text-static">Sort: Status</div>
+                                <div *ngIf="sortBy=='name'" class="text-static">Sort: Name</div>
+                            </div>
+                        </div>
+                        <div class="menu-items left dropdown-menu" role="menu" *dropdownMenu>
+                            <div role="menuitem" (click)="sortBy='dueDate';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='dueDate' || sortBy==''}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Due Date</div>
+                            </div>
+                            <div role="menuitem" (click)="sortBy='createdBy';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='createdBy'}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Created By</div>
+                            </div>
+                            <div role="menuitem" (click)="sortBy='status';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='status'}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Status</div>
+                            </div>
+                            <div role="menuitem" (click)="sortBy='name';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='name'}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Name</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div dropdown #filterDropdown="bs-dropdown" [autoClose]="true" [ngClass]="{'filter-applied': filterApplied}">
+                        <div class="filter-icon-wrapper" dropdownToggle (click)="openFiletrDropDown(filterDropdown)">
+                            <i class="fa fa-filter filter-ion"></i>
+                            <div *ngIf="filterApplied" class="filterApplied"></div>
+                        </div>
+                        <div class="filter-popup dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                            <div class="button-wrapper">
+                                <div class="flat-btn" (click)="filterDropdown.hide(); applyFiletrDropDown()">Apply Filter</div>
+                                <div class="flat-btn" (click)="filterDropdown.hide(); resetFilterDropDown()">Reset</div>
+                            </div>
+                            <div class="filter-category-wrapper-outer">
+                                <div class="filter-category-wrapper">
+                                    <div class="category-lbl">
+                                        Update Request
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleUpdateRequestForFilter('active')" [ngClass]="{'applied': taskCallToAction.indexOf('active') != -1}">
+                                        Active
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleUpdateRequestForFilter('off')" [ngClass]="{'applied': taskCallToAction.indexOf('off') != -1}">
+                                        Off
+                                    </div>
+                                </div>
+                                <div class="filter-category-wrapper">
+                                    <div class="category-lbl">
+                                        Status
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedStatusForFilter('pending')" [ngClass]="{'applied': taskStatusArr.indexOf('pending') != -1}">
+                                        Pending
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedStatusForFilter('in-progress')" [ngClass]="{'applied': taskStatusArr.indexOf('in-progress') != -1}">
+                                        In-Progress
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedStatusForFilter('overdue')" [ngClass]="{'applied': taskStatusArr.indexOf('overdue') != -1}">
+                                        Overdue
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedStatusForFilter('completed')" [ngClass]="{'applied': taskStatusArr.indexOf('completed') != -1}">
+                                        Complete
+                                    </div>
+                                </div>
+                                <div class="filter-category-wrapper">
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="showOnlyToday_sTasks">
+                                            Only show Tasks due today
+                                        </label>
+                                        <input id="showOnlyToday_sTasks" class="form-check-input" [(ngModel)]="showOnlyToday_sTasks" type="checkbox" value="">
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="hideOverdueTasks">
+                                            Hide missed deadlines
+                                        </label>
+                                        <input id="hideOverdueTasks" class="form-check-input" [(ngModel)]="hideOverdueTasks" type="checkbox" value="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+    
+            <div class="panel-body" [ngClass]="{'no-item': assignedTasks.length == 0}">
+                <!--<div *ngIf="assignedTasks.length == 0" class="no-item-info-wrapper">
+                    <div class="title">No task planned right now</div>
+                    <div class="description">How about we get things moving by planning task(s)?</div>
+                    <button class="cretae-event-btn btn btn-primary" (click)="startCreateEvent()">Plan Task</button>
+                </div>-->
+                <div *ngIf="assignedTasks.length > 0" class="list-title">
+                    Tasks
+                </div>
+                <div *ngIf="assignedTasks.length > 0" class="task-list">
+                    <div *ngFor="let task of filteredTasks" (click)="showTaskDetail(task)" class="list-item" [ngClass]="{'in-progress': task.status=='in-progress', 'overdue': task.status=='overdue', 'completed': task.status=='completed'}">
+                        <div class="section-1">
+                            <div class="due-date-wrapper">
+                                <i *ngIf="task.callToAction" class="fa fa-bell icon"></i>
+                                <div *ngIf="task.dueDate > 0" class="date-text">Due {{task.dueDateToDisplay}}</div>
+                                <div *ngIf="task.dueDate === 0" class="date-text">--</div>
+                            </div>
+                            <div class="card-name">{{task.cardName}}</div>
+                            <div class="title">{{task.name}}</div>
+                            <div *ngIf="task.unreadMsg || task.inCompleteTodo" class="notes-to-do-counts">
+                                <div *ngIf="task.unreadMsg > 0" class="counts">
+                                    <i class="fa fa-comment icon"></i>
+                                    {{task.unreadMsg}}
+                                </div>
+                                <div *ngIf="task.inCompleteTodo > 0" class="counts">
+                                    <i class="fa fa-check-circle icon"></i>
+                                    {{task.inCompleteTodo}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section-2">
+                            <div class="status">{{task.status}}</div>
+                            <div class="suscribers">
+                                <img *ngFor="let participant of task.participants | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">
+                                <div *ngIf="task.participants.length > 3" class="counter">
+                                    + {{task.participants.length - 3}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="panel-header">
+                <div class="month-control">
+                    <i class="fas fa-chevron-left prev-btn" (click)="goToPreviousMonth()"></i>
+                    <i class="fas fa-chevron-right next-btn" (click)="goToNextMonth()"></i>
+                    <div class="month-info">
+                        <div class="month-name">
+                            {{months[currentMonthIndex]}} {{fullYear}}
+                        </div>
+                        <div class="task-stats">
+                            <span class="total">{{totalTasksNum}} Deadlines</span>
+                            <span class="new">{{newTasksNum}} New Tasks</span>
+                        </div>
+                    </div>
+                    <div class="filter-opt-planner" (click)="toogleSelectedStatus('pending')" [ngClass]="{'applied': filterOptions.status.indexOf('pending') != -1}">
+                        Pending
+                    </div>
+                    <div class="filter-opt-planner" (click)="toogleSelectedStatus('in-progress')" [ngClass]="{'applied': filterOptions.status.indexOf('in-progress') != -1}">
+                        In-progress
+                    </div>
+                    <div class="filter-opt-planner" (click)="toogleSelectedStatus('overdue')" [ngClass]="{'applied': filterOptions.status.indexOf('overdue') != -1}">
+                        Overdue
+                    </div>
+                    <div class="filter-opt-planner" (click)="toogleSelectedStatus('completed')" [ngClass]="{'applied': filterOptions.status.indexOf('completed') != -1}">
+                        Completed
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary today-btn" type="button" (click)="goToTodayMonthView()">Jump to Today</button>
+            </div>
+            <div class="panel-body calender-view">
+                <div class="header">
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==0}">Sun</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==1}">Mon</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==2}">Tue</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==3}">Wed</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==4}">Thu</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==5}">Fri</div>
+                    <div class="col-title" [ngClass]="{'selected': selectedColumn==6}">Sat</div>
+                </div>
+                <div #calenderContent class="week-rows">
+                    <div *ngFor="let row of calenderData" class="week-row">
+                        <div *ngFor="let data of row" class="day-col" (click)="setSelectedDate(data)" [ngClass]="{'disabled': data.disabled, 'selected': data.dateNum==selectedDate }">
+                            <div class="date">{{data.date|date:'d'}}</div>
+                            <div *ngFor="let task of data.tasks | slice:0:3;" class="task-chip" [ngClass]="{'in-progress': task.status=='in-progress','overdue': task.status=='overdue','completed': task.status=='completed'}">
+                                <i *ngIf="task.callToAction" class="fa fa-bell bell-icon"></i>
+                                <div class="task-name-wrapper">
+                                    <div class="text">
+                                        {{task.name}}
+                                    </div>
+                                </div>
+                                <div *ngIf="task.unreadMsg || task.inCompleteTodo" class="notes-to-do-counts">
+                                    <div *ngIf="task.unreadMsg > 0" class="counts">
+                                        <i class="fa fa-comment icon"></i>
+                                        {{task.unreadMsg}}
+                                    </div>
+                                    <div *ngIf="task.inCompleteTodo > 0" class="counts">
+                                        <i class="fa fa-check-circle icon"></i>
+                                        {{task.inCompleteTodo}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="data.tasks.length > 3" class="counter">
+                                + {{data.tasks.length - 3}} <span>more</span>
+                            </div>
+                        </div>
+                        <!--<div class="day-col">
+                            <div class="date">1</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">2</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">3</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">4</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">5</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">6</div>
+                        </div>-->
+                    </div>
+                    <!--<div class="week-row">
+                        <div class="day-col">
+                            <div class="date">7</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">8</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">9</div>
+                        </div>
+                        <div class="day-col selected">
+                            <div class="date">10</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">11</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">12</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">13</div>
+                        </div>
+                    </div>
+                    <div class="week-row">
+                        <div class="day-col">
+                            <div class="date">14</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">15</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">16</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">17</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">18</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">19</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">20</div>
+                        </div>
+                    </div>
+                    <div class="week-row">
+                        <div class="day-col">
+                            <div class="date">21</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">22</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">23</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">24</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">25</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">26</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">27</div>
+                        </div>
+                    </div>
+                    <div class="week-row">
+                        <div class="day-col">
+                            <div class="date">28</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">29</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">30</div>
+                        </div>
+                        <div class="day-col">
+                            <div class="date">31</div>
+                        </div>
+                        <div class="day-col disabled">
+                            <div class="date ">1</div>
+                        </div>
+                        <div class="day-col disabled">
+                            <div class="date">2</div>
+                        </div>
+                        <div class="day-col disabled">
+                            <div class="date">3</div>
+                        </div>
+                    </div>-->
+                </div>    
+            </div>
+        </div>
+    </div>
+</div>

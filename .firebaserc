@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "taskkey-dev",
+    "taskkey-prod": "taskkey-prod"
+  }
+}

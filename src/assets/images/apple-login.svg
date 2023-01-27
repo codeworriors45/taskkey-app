@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="60" viewBox="0 0 150 60">
+  <g id="Group_3943" data-name="Group 3943" transform="translate(-1444 -707)">
+    <g id="Rectangle_1667" data-name="Rectangle 1667" transform="translate(1444 707)" fill="none" stroke="#284558" stroke-width="2">
+      <rect width="150" height="60" rx="30" stroke="none"/>
+      <rect x="1" y="1" width="148" height="58" rx="29" fill="none"/>
+    </g>
+    <g id="Group_3462" data-name="Group 3462" transform="translate(1459.479 722.025)">
+      <rect id="Rectangle_1673" data-name="Rectangle 1673" width="30" height="30" transform="translate(0.165 -0.025)" fill="none"/>
+      <path id="Icon_awesome-apple" data-name="Icon awesome-apple" d="M525.758-120.379a6.25,6.25,0,0,1,3.322-5.672,7.129,7.129,0,0,0-5.627-2.982c-2.356-.187-4.937,1.385-5.882,1.385-.991,0-3.282-1.318-5.077-1.318-3.707.058-7.648,2.975-7.648,8.907a16.757,16.757,0,0,0,.957,5.431c.851,2.453,3.92,8.473,7.125,8.371,1.674-.039,2.852-1.2,5.036-1.2,2.107,0,3.209,1.2,5.077,1.2,3.225-.046,6.008-5.516,6.821-7.977a6.626,6.626,0,0,1-4.1-6.146ZM522-131.362a6.33,6.33,0,0,0,1.6-4.847,7.031,7.031,0,0,0-4.513,2.334,6.42,6.42,0,0,0-1.7,4.808A5.568,5.568,0,0,0,522-131.362Z" transform="translate(-502.376 136.209)" fill="#294658"/>
+    </g>
+    <g id="Group_3940" data-name="Group 3940" transform="translate(1441 705.547)">
+      <text id="Apple" transform="translate(93.645 44.453)" fill="#294658" font-size="23" font-family="SegoeUI, Segoe UI"><tspan x="-29.738" y="0">Apple</tspan></text>
+      <text id="Continue_with" data-name="Continue with" transform="translate(93.645 22.453)" fill="#294658" font-size="11" font-family="SegoeUI, Segoe UI"><tspan x="-33.827" y="0">Continue with</tspan></text>
+    </g>
+  </g>
+</svg>

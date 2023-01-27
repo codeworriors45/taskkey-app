@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132.706" height="120.601" viewBox="0 0 132.706 120.601">
+  <g id="Group_3458" data-name="Group 3458" transform="translate(-136.499 -160.999)">
+    <g id="Group_3457" data-name="Group 3457" transform="translate(138.001 162.499)">
+      <g id="Group_3455" data-name="Group 3455" transform="translate(0)">
+        <g id="Group_3456" data-name="Group 3456" transform="translate(0 24.207)">
+          <path id="polyline197" d="M105.183,16.334l26.054,12.122.4,80.671H3.144L2.538,28.455l27.8-12.122" transform="translate(-2.538 -16.334)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <path id="polyline199" d="M2.814,84.525,67.063,36.039l64.249,48.486" transform="translate(-2.208 8.267)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <line id="line201" x2="51.924" y2="41.38" transform="translate(0.606 12.121)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+          <line id="line203" x1="51.682" y2="41.048" transform="translate(76.776 12.244)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        </g>
+        <path id="polyline205" d="M16,63.056V6.388H89.292v57.3" transform="translate(12.151 -6.388)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <line id="line207" x2="40.648" transform="translate(50.685 12.316)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <line id="line209" x2="53.496" transform="translate(37.836 26.545)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <line id="line211" x2="53.496" transform="translate(37.836 40.769)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <line id="line213" x2="53.496" transform="translate(37.836 54.997)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+</svg>

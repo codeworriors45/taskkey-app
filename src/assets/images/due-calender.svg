@@ -1,0 +1,19 @@
+<svg id="ic_duedate-blue" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <rect id="Rectangle_334" data-name="Rectangle 334" width="24" height="24" fill="rgba(255,255,255,0)"/>
+  <g id="Group_1022" data-name="Group 1022" transform="translate(0 0.5)">
+    <g id="Group_1021" data-name="Group 1021">
+      <g id="Rectangle_329" data-name="Rectangle 329" transform="translate(0 0.5)" fill="none" stroke="#324755" stroke-miterlimit="10" stroke-width="1">
+        <rect width="24" height="23" rx="3" stroke="none"/>
+        <rect x="0.5" y="0.5" width="23" height="22" rx="2.5" fill="none"/>
+      </g>
+      <line id="Line_92" data-name="Line 92" x2="24" transform="translate(0 4.989)" fill="none" stroke="#324755" stroke-miterlimit="10" stroke-width="1"/>
+      <g id="Group_1020" data-name="Group 1020" transform="translate(6 8)">
+        <circle id="Ellipse_170" data-name="Ellipse 170" cx="6" cy="6" r="6" fill="none" stroke="#324755" stroke-miterlimit="10" stroke-width="1"/>
+        <path id="Path_933" data-name="Path 933" d="M468.824,455.983v3.408h3.216" transform="translate(-462.824 -453.391)" fill="none" stroke="#324755" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <line id="Line_94" data-name="Line 94" y2="3" transform="translate(12)" fill="none" stroke="#324755" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="Line_104" data-name="Line 104" y2="3" transform="translate(19)" fill="none" stroke="#324755" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="Line_103" data-name="Line 103" y2="3" transform="translate(5)" fill="none" stroke="#324755" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1"/>
+    </g>
+  </g>
+</svg>

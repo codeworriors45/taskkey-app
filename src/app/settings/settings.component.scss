@@ -1,0 +1,267 @@
+.tab-items {
+    padding-top: 90px;
+
+    .tab-item {
+        padding: 5px 13px;
+        border-left: 4px solid transparent;
+        color: #294658;
+        display: flex;
+        align-items: center;
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+        cursor: pointer;
+
+        &.active {
+            background-color: #F4F5F6;
+            transition:  1s;
+
+            .icon {
+                color: #294658;
+            }
+        }
+
+        .text {
+            padding: 7px;
+            font-size: 15px;
+        }
+    }
+}
+
+.edit-pencil {
+    position: relative;
+    margin-top: 72px;
+    margin-left: -25px;
+    height: 30px;
+}
+
+.pencil {
+    position: absolute;
+    color: #A7C2CC;
+    top: 4px;
+    left: 6px;
+}
+
+::ng-deep .modal-dialog {
+    max-width: 650px !important;
+    width: 700px;
+}
+
+.modal-body {
+    height: 650px;
+    padding-top: 0px;
+}
+
+.heading {
+    display: flex;
+    align-items: center;
+    padding-left: 21px;
+    padding-top: 40px;
+    height: 50px;
+    color: #294658;
+
+    .icon {
+        padding-top: 3px;
+        border-color: #294658;
+        font-size: 20px;
+    }
+
+    .heading-item {
+        padding-left: 8px;
+        font-size: 25px;
+        font-family: "Futura Std";
+        
+    }
+}
+
+.pull-right {
+    margin-right: 8px;
+    margin-top: 9px;
+}
+
+.border-right {
+    padding: 0px;
+    padding-right: 15px;
+    border-right: 1px solid #ddd;
+}
+
+.user-image {
+    height: 100px;
+    width: 100px;
+    border-radius: 73%;
+    border: 1px solid #141413;
+}
+
+.image-area {
+  margin-top: 45px;
+  margin-bottom: 45px;
+
+  .spinners {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    height: 5rem;
+    align-items: center;
+    margin: 0 1rem;
+  }
+  
+  .spin_border .spinner_circle div {
+    border: 0.2rem solid #8D9CA6;
+    width: 2rem;
+    height: 2rem;
+    border-top-color: #294759;
+    border-left-color: #294759;
+    border-radius: 50%;
+    -webkit-animation: spinner 1s linear 0s infinite;
+            animation: spinner 1s linear 0s infinite;
+  }
+  @keyframes spinner {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spin_border {
+    position: absolute;
+    top: 8%;
+  }
+
+}
+
+.row {
+    justify-content: center;
+    padding-bottom: 6px;
+}
+
+.form-notes:before {
+    content: "* ";
+}
+
+.form-notes {
+    font-size: 14px;
+    position: inherit;
+    float: right;
+    color: #294658;
+}
+
+.toggel-label {
+    font-weight: bold;
+    margin-left: 25px;
+}
+
+.update-button {
+    width: 75px;
+    height: 35px;
+    border-radius: 5px;
+    border-width: 1px;
+    margin-top: 10px;
+    float: right;
+
+    &:hover {
+        background-color: #294658;
+        color: #ccc;
+        cursor: pointer;
+    }
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 55px;
+    height: 25px;
+}
+  
+  /* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+  /* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+  
+input:checked + .slider {
+    background-color: #294658;
+}
+  
+input:focus + .slider {
+    box-shadow: 0 0 1px #294658;
+}
+  
+input:checked + .slider:before {
+    -webkit-transform: translateX(13px);
+    -ms-transform: translateX(13px);
+    transform: translateX(13px);
+}
+  
+  /* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+  
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.taskkey-about {
+    float: left;
+    width: inherit;
+
+    .head-lable {
+        position: absolute;
+        top: 20px;
+    }
+
+    .content-about {
+        margin-left: 30px;
+
+        .content-left {
+            font-size: 15px;
+            margin-top: 20px;
+            justify-content: flex-start;
+        }
+
+        .social-icon {
+            margin-right: 15px;
+    
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+
+    .bottom-img {
+        width: inherit;
+        margin-top: 24px;
+        padding: 0px;
+    }
+
+    
+}
+  

@@ -1,0 +1,226 @@
+<div class="detail-container">
+    <div class="left-panel">
+        <div class="panel-header">
+            <div class="title-wrapper">
+                <div class="title">Files</div>
+                <i class="fa fa-plus add-new-btn" (click)="initiateFileUpload()"></i>
+            </div>
+            <div class="col short-filter-wrapper">
+                <div dropdown [ngClass]="{'sort-applied': sortBy!=''}">
+                    <div class="shorting-wrapper">
+                        <i class="fa fa-sort static-icon" (click)="toogleSortOrder()"></i>
+                        <div dropdownToggle>
+                            <div *ngIf="sortBy=='name' || sortBy==''" class="text-static">Sort: Name</div>
+                            <div *ngIf="sortBy=='date'" class="text-static">Sort: Date</div>
+                            <div *ngIf="sortBy=='size'" class="text-static">Sort: Size</div>
+                            <div *ngIf="sortBy=='type'" class="text-static">Sort: Type</div>
+                        </div>
+                    </div>
+                    <div class="menu-items left dropdown-menu" role="menu" *dropdownMenu>
+                        <div role="menuitem" (click)="sortBy='name';sortFiles()" class="menu-item" [ngClass]="{'active': sortBy=='name' || sortBy==''}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Name</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='date';sortFiles()" class="menu-item" [ngClass]="{'active': sortBy=='date'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Date</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='size';sortFiles()" class="menu-item" [ngClass]="{'active': sortBy=='size'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Size</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='type';sortFiles()" class="menu-item" [ngClass]="{'active': sortBy=='type'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Type</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-viewmode-wrapper">
+                    <i class="fas fa-th viewmode-icon" (click)="toogleViewMode()" [ngClass]="{'clicked': clickedViewModeBtn, 'fa-bars': viewMode=='grid', 'fa-th': viewMode=='list'}"></i>
+                    <div dropdown #filterDropdown="bs-dropdown" [autoClose]="true" [ngClass]="{'filter-applied': filterApplied}">
+                        <div class="filter-icon-wrapper" dropdownToggle (click)="openFiletrDropDown(filterDropdown)">
+                            <i class="fa fa-filter filter-ion"></i>
+                            <div *ngIf="filterApplied" class="filterApplied"></div>
+                        </div>
+                        <div class="filter-popup dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                            <div class="button-wrapper">
+                                <div class="flat-btn" (click)="filterDropdown.hide(); applyFiletrDropDown()">Apply Filter</div>
+                                <div class="flat-btn" (click)="filterDropdown.hide(); resetFilterDropDown()">Reset</div>
+                            </div>
+                            <div class="filter-category-wrapper-outer">
+                                <div class="filter-category-wrapper">
+                                    <div class="category-lbl">
+                                        File Type
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedTypeForFilter('img')" [ngClass]="{'applied': fileTypeArr.indexOf('img') != -1}">
+                                        Image
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedTypeForFilter('other')" [ngClass]="{'applied': fileTypeArr.indexOf('other') != -1}">
+                                        Document
+                                    </div>
+                                    <div class="filter-opt" (click)="toogleSelectedTypeForFilter('pdf')" [ngClass]="{'applied': fileTypeArr.indexOf('pdf') != -1}">
+                                        Other
+                                    </div>
+                                </div>
+                                <div class="filter-category-wrapper asigned-to">
+                                    <div class="category-lbl">
+                                        Uploaded By
+                                    </div>
+                                    <div *ngFor="let participant of participants; let i=index" class="filter-opt small" 
+                                        [ngClass]="{'applied': participant.selected}" (click)="participant.selected = !participant.selected">
+                                        <div class="user-info">
+                                            <img *ngIf="participant.profileImage" appImgFallback="assets/images/user1.svg" [src]="participant.profileImage">
+                                            <img *ngIf="!participant.profileImage" src="assets/images/user{{i%2==0?2:1}}.png">
+                                            {{participant.name}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="panel-body" [ngClass]="{'no-item': uploadedFiles.length == 0}">
+            <div *ngIf="uploadedFiles.length == 0" class="no-item-info-wrapper">
+                <div class="title">No file at the moment</div>
+                <div class="description">Drag and Drop your file here to share with your fellow</div>
+            </div>
+            <div *ngIf="uploadedFiles.length > 0 && viewMode=='list'" class="list-view">
+                <div *ngFor="let file of filteredFiles" class="item" [ngClass]="{'selected': selectedFile && selectedFile.id==file.id}">
+                   <div class="section-1" (click)="previewFile(file)">
+                        <img *ngIf="file.type == 'img' && !file.fullImageLoaded" (click)="previewFile(file)" [src]="file.trustedThumbUrl">
+                        <img *ngIf="file.type == 'img'" (click)="previewFile(file)" [src]="file.url" (load)="file.fullImageLoaded = true" [ngClass]="{'hide': !file.fullImageLoaded}">
+                       <div *ngIf="file.type != 'img'" class="not-img">
+                        <img *ngIf="file.type == 'pdf'" src="../../../../assets/images/file-pdf-small.svg">
+                        <img *ngIf="file.type != 'pdf'" src="../../../../assets/images/file-empty-small.svg">
+                        <div *ngIf="file.type != 'pdf'" class="ext">
+                            .{{file.ext}}
+                        </div>
+                       </div>
+                   </div>
+                   <div class="section-2">
+                        <div (click)="previewFile(file)" class="name">{{file.name}}.{{file.ext}}</div>
+                        <div>
+                            <div *ngIf="file.createdByUser" class="info">Uploaded by {{file.createdByUser.fullName}}&nbsp;&nbsp;({{file.sizeToDisplay}})</div>
+                            <div class="info">{{file.dateToDisplay}}</div>
+                        </div>
+                    </div>
+                    <div class="section-3" dropdown #operationDropdown="bs-dropdown" [autoClose]="true">
+                        <i class="fa fa-ellipsis-v opt-icon" dropdownToggle (click)="openFileOperationDropDown(operationDropdown)"></i>
+                        <div class="operation-dropdown dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                            <div class="title">
+                                {{file.name}}.{{file.ext}}
+                            </div>
+                            <div class="created-by-date">
+                                {{file.sizeToDisplay}}
+                            </div>
+                            <div class="menu-items">
+                                <!--<div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); shareFile(file)">
+                                    <div class="icon fas fa-share-alt"></div>
+                                    <div class="text">Share File</div>
+                                </div>-->
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); downloadFile(file)">
+                                    <div class="icon fas fa-file-download"></div>
+                                    <div class="text">Download File</div>
+                                </div>
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); renameFile(file)">
+                                    <div class="icon far fa-edit"></div>
+                                    <div class="text">Rename</div>
+                                </div>
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); deleteFile(file)">
+                                    <div class="icon far fa-trash-alt"></div>
+                                    <div class="text">Delete</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="uploadedFiles.length > 0 && viewMode=='grid'" class="grid-view">
+                <div *ngFor="let file of filteredFiles" class="item" [ngClass]="{'selected': selectedFile && selectedFile.id==file.id, 'not-img': file.type != 'img' }">
+                    <img *ngIf="file.type == 'img' && !file.fullImageLoaded" (click)="previewFile(file)" [src]="file.trustedThumbUrl">
+                    <img *ngIf="file.type == 'img'" (click)="previewFile(file)" [src]="file.url" (load)="file.fullImageLoaded = true" [ngClass]="{'hide': !file.fullImageLoaded}">
+                    <div *ngIf="file.type != 'img'" (click)="previewFile(file)" class="not-img-block">
+                        <img *ngIf="file.type == 'pdf'" src="../../../../assets/images/file-pdf-large.svg">
+                        <img *ngIf="file.type != 'pdf'" src="../../../../assets/images/file-empty-large.svg">
+                        <div *ngIf="file.type != 'pdf'" class="ext">
+                            .{{file.ext}}
+                        </div>
+                        <div class="file-name-wrapper">
+                            <div class="text">
+                                {{file.name}}.{{file.ext}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>   
+
+    <div class="right-panel">
+        <div class="panel-header">
+            <div *ngIf="selectedFile && !startFileUpload">
+                {{selectedFile.name}}.{{selectedFile.ext}}
+            </div>
+            <div *ngIf="selectedFile && !startFileUpload" class="file-action-btn-wrapper">
+                <i class="fas fa-file-download btn-icon" (click)="downloadFile(selectedFile)"></i>
+                <i class="far fa-trash-alt btn-icon" (click)=" deleteFile(selectedFile)"></i>
+            </div>
+        </div>
+        <div *ngIf="startFileUpload" class="panel-body upload-file-ui" [ngClass]="{'uploading': fileUploadStatus==1, 'success': fileUploadStatus==2, 'error': fileUploadStatus==-1}">
+            <div class="container" appDnd (fileDropped)="onFileDropped($event)">
+                <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" accept="application/pdf, image/png, image/jpeg, .doc, .docx"/>
+                <div *ngIf="fileUploadStatus==0" class="input-wrapper">
+                    <img src="../../../../assets/images/file-upload.svg" class="upload-icon">
+                    <div class="description">Drag & Drop file here</div>
+                    <div class="description">Or</div>
+                    <label class="btn btn-primary select-file-btn" for="fileDropRef">Choose a File</label>
+                </div>
+                <div *ngIf="fileUploadStatus==1" class="status-uploading">Uploading...</div>
+                <div *ngIf="fileUploadStatus==2" class="status-sussess">
+                    <div class="text">File(s) Successfully Uploaded!</div>
+                    <label class="btn btn-primary select-file-btn" (click)="markUploadCompleted()">Done</label>
+                </div>
+                <div *ngIf="fileUploadStatus==-1" class="status-error">
+                    <div class="text">Some thing went wrong!</div>
+                    <label class="btn btn-outline-primary select-file-btn" (click)="initiateFileUpload()">Try again</label>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedFile && !startFileUpload" class="panel-body file-preview">
+            <div class="prev-btn">
+                <i (click)="previewPrevFile()" class="fas fa-chevron-left"></i>
+            </div>
+            <div class="file-container">
+                <div *ngIf="selectedFile.type=='img'" class="file-wrapper-outer">
+                    <div class="file-wrapper">
+                        <img [src]="selectedFile.url">
+                    </div>
+                </div>
+                <div *ngIf="selectedFile.type!='img'" class="file-wrapper">
+                    <div *ngIf="selectedFile.type=='pdf'" class="pdf-wrapper">
+                        <div *ngIf="showFileLoadingIndicator" class="spin_border">
+                            <div class="spinners">
+                              <div class="spinner_circle">
+                                <div></div>
+                              </div>
+                            </div>
+                        </div>
+                        <!--<pdf-viewer src="../../../../assets/dummy.pdf" [external-link-target]="'blank'" [show-all]="false" [original-size]="false" [autoresize]="true" [render-text]="false"></pdf-viewer>-->
+                        <pdf-viewer (after-load-complete)="fileLoadedEvtHandler($event)" [src]="selectedFile.url" [external-link-target]="'blank'" [show-all]="false" [original-size]="false" [autoresize]="true" [render-text]="false"></pdf-viewer>
+                    </div>
+                    <div *ngIf="selectedFile.type=='other'" class="download-icon-text-wrapper">
+                        <img class="download-icon" (click)="openInNewTab(selectedFile)" src="../../../../assets/images/file-download.svg">
+                        <div (click)="openInNewTab(selectedFile)" class="download-text">Click to download</div>
+                    </div>
+                </div>
+            </div>
+            <div class="next-btn">
+                <i (click)="previewNextFile()" class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+</div>

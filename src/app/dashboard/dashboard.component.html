@@ -1,0 +1,121 @@
+<div #pageContent class="page-content" (window:resize)="onResize($event)" [ngClass]="{'hide-carousal-left-arrow': !menuClosed, 'blank-bg': ((projectId=='' && slideArray.length==0) || filterOption!='active'), 'nightTimeBG': isNightTime}">
+    <div class="content-wrapper" [ngClass]="{'hide': slideArray.length==0}">
+        <!--<div class="top-btns">
+            <div class="widget-btn">
+                <button type="button" class="btn btn-primary">Widgets</button>
+            </div>
+
+            <div class="right-btns-wrapper">
+                <button type="button" class="btn btn-outline-primary create-card-btn" (click)="openCreateCardPopup()"><i class="fa fa-plus"></i>Create Card</button>
+                <div class="btn-group sagment-btns" btnRadioGroup [(ngModel)]="filterOption">
+                    <label class="btn btn-outline-primary" (click)="showCard()" btnRadio="active">Active</label>
+                    <label class="btn btn-outline-primary" (click)="showCard()" btnRadio="new">New</label>
+                </div>
+            </div>
+        </div>-->
+        <div *ngIf="slideArray.length > 0 && projectId!=''" class="carousel-container">
+            <!--<carousel [itemsPerSlide]="itemsPerSlide" [singleSlideOffset]="singleSlideOffset" [startFromIndex]="0" [interval]="false" [showIndicators]="false" [noPause]="true">-->
+            <carousel [activeSlide]="activeSlide" [interval]="false" [showIndicators]="false">
+                <slide  *ngFor="let activeCards of slideArray" [ngClass]="{'space-arround': activeCards.length < 3 && activeCards.length < size}">
+                    <div *ngFor="let card of activeCards" class="card-container" [ngClass]="{'active': card.id==projectId || card.id==selectedNewCardId}" (click)=onCardClick(card)>
+                        <div class="c-body" [ngClass]="{'border-bottom': filterOption=='active'}">
+                            <div class="circle">
+                                <i *ngIf="card.callToAction && filterOption=='active'" class="fa fa-bell icon"></i>
+                                <img *ngIf="card.image && !card.callToAction && filterOption=='active'" [src]="card.image">
+                                <span *ngIf="!card.image || filterOption=='new'">{{card.acronymName}}</span>
+                            </div>
+                            <div class="title">{{card.name}}</div>
+                            <div *ngIf="filterOption === 'active'" class="finish-percantage">
+                                <div class="percantage">{{card.completion}}%</div>
+                                <div class="status-txt">Completed</div>
+                            </div>
+                            <div *ngIf="filterOption=='new'" class="created-at">
+                                {{card.timestamp}}
+                            </div>
+                        </div>
+                        <div class="c-footer" [ngClass]="{'active-card': filterOption=='active'}">
+                            <div *ngIf="card.id!=projectId" class="suscribers">
+                                <img *ngFor="let participant of card.participants | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">
+                                <div *ngIf="card.totalParticipants > 3" class="counter">
+                                    + {{card.totalParticipants - 3}} <span>others</span>
+                                </div>
+                            </div>
+                            <div *ngIf="card.id==projectId" class="selected-project-suscribers">
+                                <div *ngFor="let participant of selectedProjectAllParticipants | slice:0:3; let i=index" class="participant-info-wrapper">
+                                    <img appImgFallback="assets/images/user1.svg" [src]="participant.profileImage">
+                                    <div class="user-name">{{participant.name}}</div>
+                                </div>
+                                <div *ngIf="card.totalParticipants > 3" class="counter">
+                                    + {{card.totalParticipants - 3}} <span>others</span>
+                                </div>
+                            </div>
+                            <div *ngIf="card.progress?.dueDate && filterOption === 'active'" class="timeline">
+                                Due on {{card.progress.dueDate.seconds * 1000 | date: 'MMM d y'}}
+                            </div>
+                            <div *ngIf="filterOption=='new'" class="btn-wrapper">
+                                <button (click)="acceptNewProject(card)" type="button" class="btn btn-primary">Accept</button>
+                                <button (click)="declineNewProject(card)" type="button" class="btn btn-outline-primary">Decline</button>
+                            </div>
+                        </div>
+                    </div>
+                </slide>
+            </carousel>
+        </div>
+        <div *ngIf="slideArray.length > 0 && projectId==''" class="card-grid-view carousel-container">
+            <div class="cards-slide" *ngFor="let activeCards of slideArray" [ngClass]="{'space-arround': activeCards.length < 3 && activeCards.length < size}">
+                <div *ngFor="let card of activeCards" class="card-container" (click)=onCardClick(card)>
+                    <div class="c-body" [ngClass]="{'border-bottom': filterOption=='active'}">
+                        <div class="circle">
+                            <i *ngIf="card.callToAction && filterOption=='active'" class="fa fa-bell icon"></i>
+                            <img *ngIf="card.image && !card.callToAction && filterOption=='active'" [src]="card.image">
+                            <span *ngIf="!card.image || filterOption=='new'">{{card.acronymName}}</span>
+                        </div>
+                        <div class="title">{{card.name}}</div>
+                        <div *ngIf="filterOption === 'active'" class="finish-percantage">
+                            <div class="percantage">{{card.completion}}%</div>
+                            <div class="status-txt">Completed</div>
+                        </div>
+                        <div *ngIf="filterOption=='new'" class="created-at">
+                            {{card.timestamp}}
+                        </div>
+                    </div>
+                    <div class="c-footer" [ngClass]="{'active-card': filterOption=='active'}">
+                        <div *ngIf="card.id!=projectId" class="suscribers">
+                            <img *ngFor="let participant of card.participants | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">
+                            <div *ngIf="card.totalParticipants > 3" class="counter">
+                                + {{card.totalParticipants - 3}} <span>others</span>
+                            </div>
+                        </div>
+                        <!--<div *ngIf="card.id==projectId" class="selected-project-suscribers">
+                            <div *ngFor="let participant of selectedProjectAllParticipants | slice:0:3; let i=index" class="participant-info-wrapper">
+                                <img appImgFallback="assets/images/user1.svg" [src]="participant.profileImage">
+                                <div class="user-name">{{participant.name}}</div>
+                            </div>
+                            <div *ngIf="card.totalParticipants > 3" class="counter">
+                                + {{card.totalParticipants - 3}} <span>others</span>
+                            </div>
+                        </div>-->
+                        <div *ngIf="card.progress?.dueDate && filterOption === 'active'" class="timeline">
+                            Due on {{card.progress.dueDate.seconds * 1000 | date: 'MMM d y'}}
+                        </div>
+                        <div *ngIf="filterOption=='new'" class="btn-wrapper">
+                            <button (click)="acceptNewProject(card)" type="button" class="btn btn-primary">Accept</button>
+                            <button (click)="declineNewProject(card)" type="button" class="btn btn-outline-primary">Decline</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+    <div *ngIf="(projectId=='' && slideArray.length==0) || (filterOption!='active' && slideArray.length==0)" class="empaty-screen" [ngClass]="{'nightTimeBG': isNightTime}">
+        <div class="content-box">
+            <!--<img src="assets/images/taskkey.png" alt="taskkeylogo" class="logo">-->
+            <div *ngIf="currentUser" class="title">Welcome, {{currentUser.fullName}}</div>
+            <div *ngIf="filterOption=='active'" class="message">On Taskkey, a card is a collection of tasks, files, and notes for an individual project. You can manage your work in a card</div>
+            <div *ngIf="filterOption!='active'" class="message">On Taskkey, a user can request you to join a card they created. Look out for new card invites here!</div>
+            <button *ngIf="filterOption=='active'" type="button" class="btn btn-primary create-card-btn" [ngClass]="{'btn-light':isNightTime, 'btn-primary':!isNightTime}" (click)="openCreateCardPopup()"><i class="fa fa-plus"></i>Create Card</button>
+        </div>
+    </div>
+</div>
+<!--<div class="page-footer">Page footer <span>Link</span></div>-->

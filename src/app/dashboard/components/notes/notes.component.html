@@ -1,0 +1,176 @@
+<div class="detail-container row">
+    <left-panel class="col-auto left-panel">
+        <div class="panel-header">
+            <div class="title-wrapper">
+                <div class="title">Notes</div>
+                <i class="fa fa-plus add-new-btn" (click)="startCreateNote()"></i>
+            </div>
+            <div class="col short-filter-wrapper">
+                <div dropdown [ngClass]="{'sort-applied': sortBy!=''}">
+                    <div class="shorting-wrapper">
+                        <img src="assets/images/sort.svg" (click)="toogleSortOrder()">
+                        <div dropdownToggle>
+                            <div *ngIf="sortBy=='title' || sortBy==''" class="text-static">Sort: Title</div>
+                            <div *ngIf="sortBy=='createdBy'" class="text-static">Sort: Created By</div>
+                            <div *ngIf="sortBy=='updated'" class="text-static">Sort: Updated</div>
+                        </div>
+                    </div>
+                    <div class="menu-items left dropdown-menu" role="menu" *dropdownMenu>
+                        <div role="menuitem" (click)="sortBy='title';sortNotes()" class="menu-item" [ngClass]="{'active': sortBy=='title' || sortBy==''}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Title</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='createdBy';sortNotes()" class="menu-item" [ngClass]="{'active': sortBy=='createdBy'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Created By</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='updated';sortNotes()" class="menu-item" [ngClass]="{'active': sortBy=='updated'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Updated</div>
+                        </div>
+                    </div>
+                </div>
+                <div dropdown #filterDropdown="bs-dropdown" [autoClose]="true" [ngClass]="{'filter-applied': filterApplied}">
+                    <div class="filter-icon-wrapper" dropdownToggle (click)="openFiletrDropDown(filterDropdown)">
+                        <img *ngIf="!filterApplied" class="filter-ion" src="assets/images/filter_ion.svg">
+                        <img *ngIf="filterApplied" class="filter-ion" src="assets/images/filter_ion-applied.svg">
+                        <div *ngIf="filterApplied" class="filterApplied"></div>
+                    </div>
+                    <div class="filter-popup dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                        <div class="button-wrapper">
+                            <div class="flat-btn" (click)="filterDropdown.hide(); applyFiletrDropDown()">Apply Filter</div>
+                            <div class="flat-btn" (click)="filterDropdown.hide(); resetFilterDropDown()">Reset</div>
+                        </div>
+                        <div class="filter-category-wrapper-outer">
+                            <div class="filter-category-wrapper asigned-to">
+                                <div class="category-lbl">
+                                    Created By
+                                </div>
+                                <div *ngFor="let participant of selectedProjectAllParticipants; let i=index" class="filter-opt small" 
+                                    [ngClass]="{'applied': participant.selected}" (click)="participant.selected = !participant.selected">
+                                    <div class="user-info">
+                                        <img appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                                        {{participant.name}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body" [ngClass]="{'no-item': notes.length == 0}">
+            <div *ngIf="notes.length > 0" class="note-list">
+                <div *ngFor="let note of filteredNotes" class="list-item" [ngClass]="{'selected': selectedNote && selectedNote.id === note.id}">
+                    <div class="section-1">
+                        <div class="title" (click)="setSelectedNote(note)">{{note.title}}</div>
+                        <div class="created-by-date">
+                            {{note.updateTime}}
+                        </div>
+                    </div>
+                    <div class="section-3" dropdown #operationDropdown="bs-dropdown" [autoClose]="true" container="left-panel" (isOpenChange)="onOperationDropDownOpenChange($event)">
+                        <i class="fa fa-ellipsis-v opt-icon" dropdownToggle></i>
+                        <div #operationDropdownPopup class="operation-dropdown dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                            <div class="title">
+                                {{note.name}}
+                            </div>
+                            <div class="created-by-date">
+                                Created by <span class="name-text">{{note._createdBy}} on</span> {{note._timestamp}}
+                            </div>
+                            <div class="menu-items">
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); deleteNote(note)">
+                                    <div class="icon far fa-trash-alt"></div>
+                                    <div class="text">Delete Note</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="notes.length == 0" class="no-item-info-wrapper">
+                <div class="title">No notes yet</div>
+                <div class="description">Have a great idea? Write it down before you forget!</div>
+                <button class="cretae-note-btn btn btn-primary" (click)="startCreateNote()">Create Note</button>
+            </div>
+        </div>
+    </left-panel>
+    <div *ngIf="!selectedNote && showAddNote" class="col right-panel">
+        <!--<div class="panel-body row">
+            <div class="col-12">
+                <div class="form-container">
+                    <form [formGroup]="noteForm">
+                        <div class="notes-header">
+                            <div class="form-input-wrapper">
+                                <input class="title" type="text" autocomplete="off" placeholder="Note Title" formControlName="title" maxlength="60"/>
+                                <div class="error-cont-info-wrapper">
+                                    <div class="errors">
+                                        <div class="error-message" *ngIf="noteForm.controls['title'].invalid && noteForm.controls['title'].touched">
+                                            <span *ngIf="noteForm.controls.title.errors?.required">Note Title is required.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="save-label" (click)="addOrUpdateNote()">SAVE</label>
+                            <label class="cancel-label" (click)="cancelNewNote()">CANCEL</label>
+                        </div>
+                        <div class="editable-div" contenteditable="true" placeholder="Add Text" (input)="onTextChange($event.target.innerText)" #newNotesContent></div>
+                    </form>
+                </div>
+            </div>
+        </div>-->
+        <div class="panel-header">
+            <form [formGroup]="noteForm">
+                <div class="title-wrapper">
+                    <div class="title-wrapper-inner">
+                        <div class="title">
+                            <div class="title-text">
+                                <input class="title-input" type="text" autocomplete="off" placeholder="Note Title" formControlName="title" maxlength="60"/>
+                            </div>
+                            <div>
+                                <label class="save-label" (click)="addOrUpdateNote()">SAVE</label>
+                                <label class="cancel-label" (click)="cancelNewNote()">CANCEL</label>
+                            </div>
+                        </div>
+                        <div class="error-message" *ngIf="noteForm.controls['title'].invalid && noteForm.controls['title'].touched">
+                            <span *ngIf="noteForm.controls.title.errors?.required">Note Title is required.</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="panel-body">
+            <div class="panel-body-inner">
+                <div class="editable-div input-field note-description" [contentEditable]="true" data-placeholder="Add Text..." (input)="onTextChange($event.target.innerText)" #newNotesContent></div>
+            </div>
+        </div>
+        
+    </div>
+    <div *ngIf="selectedNote" class="col right-panel">
+        <div class="panel-header">
+            <div class="title-wrapper">
+                <div class="title-wrapper-inner">
+                    <div class="title">
+                        <div class="title-text">
+                            <div class="editable-div input-field" [contentEditable]="selectedNote.isAllowed" data-placeholder="Add Title..." (keydown)="allowOnly60Chars($event)" (input)="onTitleChange($event.target.innerText)" #notesTitle></div>
+                        </div>
+                        <div *ngIf="selectedNote.isAllowed">
+                            <label class="save-label" (click)="addOrUpdateNote()">SAVE</label>
+                            <label class="cancel-label" (click)="cancleNotesUpdate()">CANCEL</label>
+                        </div>
+                    </div>
+                    <label class="created-by-date udated-time-label">{{selectedNote.updateTime}}</label>
+                    <div class="creator">
+                        <img class="creator-img" appImgFallback="assets/images/user1.svg" [src]="selectedNote.profileImage">
+                        <label class="creator-name">{{selectedNote._createdBy}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="panel-body-inner">
+                <div class="editable-div input-field note-description" [contentEditable]="selectedNote.isAllowed" data-placeholder="Add Text..." (input)="onTextChange($event.target.innerText)" #notesContent></div>
+            </div>
+        </div>
+    </div>
+</div>

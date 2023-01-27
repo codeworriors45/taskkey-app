@@ -1,0 +1,111 @@
+<div class="row login-container">
+   <div class="col-6 bg-wrapper">
+      <img src="assets/images/login-bg.png">
+   </div>
+   <div class="col-6 form-wrapper">
+      <div *ngIf="showLoginOptionsUI" class="form-inner-wrapper">
+         <img src="assets/images/login-logo.png">
+         <div class="title">Get Organized with Taskkey</div>
+         <div class="description">You can access Taskkey by using one of these methods</div>
+         <div class="buttons-wrapper">
+            <button (click)="signInWithPhoneNumberStart()" type="button" class="btn btn-outline-primary"><i class="fas fa-mobile-alt"></i>Phone Number</button>
+            <button (click)="signInWithMagicLinkStart()" type="button" class="btn btn-outline-primary"><i class="fas fa-envelope"></i>Email Address</button>
+
+            <button (click)="googleSignIn()" type="button" class="btn btn-outline-primary social-login-btn">
+               <i class="fab fa-google"></i>
+               <div class="small-text">Continue with</div>
+               <div class="large-text">Google</div>
+            </button>
+
+            <!--<div class="social-login-buttons row">
+               <div class="col-6">
+                  <img src="assets/images/google-login.svg" (click)="googleSignIn()">
+               </div>
+               <div class="col-6">
+                  <img src="assets/images/apple-login.svg" (click)="appleSignIn()">
+               </div>
+            </div>-->
+         </div>
+         <div class="bottom-notes">
+            By continuing, you agree to our <a class="btn btn-link" href="https://www.ibgresearch.ae/terms-and-conditions" target="_blank">Terms</a> and <a class="btn btn-link" href="https://www.ibgresearch.ae/terms-and-conditions" target="_blank">Privacy Policy</a>
+         </div>
+      </div>
+
+
+      
+      <div *ngIf="!showLoginOptionsUI" class="form-inner-wrapper">
+         <i *ngIf="showBackBtn" class="fas fa-chevron-left back-btn" (click)="showStep1()"></i>
+         <div id="recaptcha-container"></div>
+         <img class="logo-right" src="assets/images/login-logo.png">
+         <form [formGroup]="signInForm">
+            <div *ngIf="showLoginWithPhoneNumberUI">
+               <div *ngIf="showLoginWithPhoneNumberStep1UI" class="step-wrapper">
+                  <img src="assets/images/login-phone-step1.svg" class="large-icon">
+                  <div class="title">Continue with Phone Mumber</div>
+                  <div class="description">Please enter your mobile phone number for us to send you a verification code</div>
+                  <div dropdown class="input-group phone-number-component">
+                     <button dropdownToggle class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">+{{signInForm.value.countryCode}}</button>
+                     <div *dropdownMenu role="menu" class="dropdown-menu">
+                       <div *ngFor="let country of countries" (click)="setCountryCode(country.dial_code)" class="country-opt">{{country.name}}</div>
+                     </div>
+                     <input formControlName="phoneNumber" type="number" pattern="^[0-9]+" placeholder="Phone Number" inputmode="tel" class="form-control" aria-label="Text input with dropdown button">
+                   </div>
+                  <button (click)="signInWithPhoneNumber()" type="button" [disabled]="signInForm.get('phoneNumber')?.errors?.required || signInForm.get('phoneNumber')?.errors?.pattern" class="btn btn-primary submit-btn">Get Verification Code</button>
+               </div>
+               <div *ngIf="!showLoginWithPhoneNumberStep1UI" class="step-wrapper">
+                  <img src="assets/images/login-phone-step2.svg" class="large-icon">
+                  <div class="title">Verify your Phone Number</div>
+                  <div class="description">Please enter the code that was sent to your phone number +{{signInForm.value.countryCode+signInForm.value.phoneNumber}}</div>
+                  <div class="otp-component">
+                     <input class="opt-input" #field1 (keyup)="onKeyUp($event, 1)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit1.length==1}" type="text" [(ngModel)]="otpDigit1" [ngModelOptions]="{standalone: true}" maxlength="1">
+                     <input class="opt-input" #field2 (keyup)="onKeyUp($event, 2)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit2.length==1}" type="text" [(ngModel)]="otpDigit2" [ngModelOptions]="{standalone: true}" maxlength="1">
+                     <input class="opt-input" #field3 (keyup)="onKeyUp($event, 3)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit3.length==1}" type="text" [(ngModel)]="otpDigit3" [ngModelOptions]="{standalone: true}" maxlength="1">
+                     <input class="opt-input" #field4 (keyup)="onKeyUp($event, 4)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit4.length==1}" type="text" [(ngModel)]="otpDigit4" [ngModelOptions]="{standalone: true}" maxlength="1">
+                     <input class="opt-input" #field5 (keyup)="onKeyUp($event, 5)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit5.length==1}" type="text" [(ngModel)]="otpDigit5" [ngModelOptions]="{standalone: true}" maxlength="1">
+                     <input class="opt-input" #field6 (keyup)="onKeyUp($event, 6)" (keydown)="onKeyDown($event)" [ngClass]="{'filled': otpDigit6.length==1}" type="text" [(ngModel)]="otpDigit6" [ngModelOptions]="{standalone: true}" maxlength="1">
+                  </div>
+                  <button *ngIf="resendTimer == 0" (click)="resendCode()" type="button"  class="btn btn-outline-primary resend-btn">Resend Code</button>
+                  <button (click)="verifyLoginCode()" [disabled]="!otpDigit1.length||!otpDigit2.length||!otpDigit3.length||!otpDigit4.length||!otpDigit5.length||!otpDigit6.length" type="button"  class="btn btn-primary submit-btn">Verify Code</button>
+                  <div class="bottom-notes">
+                     Please wait {{resendTimer}}s or <button type="button" (click)="signInWithPhoneNumberStart()" class="btn btn-link">Change Phone Number</button>
+                  </div>
+               </div>
+            </div>
+
+            <div *ngIf="!showLoginWithPhoneNumberUI && !showInCompleteUI">
+               <div *ngIf="showLoginWithEmailStep1UI" class="step-wrapper">
+                  <img src="assets/images/login-email-icon.svg" class="large-icon">
+                  <div class="title">Continue with Email</div>
+                  <div class="description">Please enter your email address and we'll send you a special link to confirm your account</div>
+                  <input formControlName="email" [ngClass]="{'valid': !signInForm.get('email').invalid, 'invalid': signInForm.get('email').invalid && signInForm.get('email').touched}" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="text" class="form-control input-email" placeholder="Email Address">
+                  <button (click)="sendMagicLink(signInForm.get('email').value)" [disabled]="signInForm.get('email')?.errors?.required || signInForm.get('email')?.errors?.pattern" type="button"  class="btn btn-primary submit-btn">Continue</button>
+               </div>
+               <div *ngIf="!showLoginWithEmailStep1UI" class="step-wrapper">
+                  <img src="assets/images/login-email-icon.svg" class="large-icon">
+                  <div class="title">Email Sent!</div>
+                  <div class="description">Confirm your account by following steps we sent to {{signInForm.value.email}}</div>
+                  <div class="description" style="margin-top: 30px;">Didn't get the email?</div>
+                  <div class="bottom-notes" style="margin-top: 10px;">
+                     <button type="button" (click)="sendMagicLink(signInForm.get('email').value)" class="btn btn-link">Resend Email</button> Or <button type="button" (click)="signInWithMagicLinkStart()" class="btn btn-link">Change Email Address</button>
+                  </div>
+               </div>
+            </div>
+
+            <div *ngIf="showInCompleteUI && !showLoginWithPhoneNumberUI">
+               <div class="step-wrapper">
+                  <img src="assets/images/login-userdata.svg" class="large-icon">
+                  <div class="title">You're almost done!</div>
+                  <div class="description">Fill in your details so that everyone knows who they are working with!</div>
+                  <div class="user-completeDataUI">
+                     <input [(ngModel)]="ngFireUser.name" [ngModelOptions]="{standalone: true}" [ngClass]="{'valid': !ngFireUser.name.length>0}" type="text" class="form-control input-email" placeholder="First Name (Required)">
+                     <input [(ngModel)]="ngFireUser.lastName" [ngModelOptions]="{standalone: true}" [ngClass]="{'valid': !ngFireUser.lastName.length>0}" type="text" class="form-control input-email" placeholder="Last Name">
+                     <input [(ngModel)]="ngFireUser.email" [ngModelOptions]="{standalone: true}" [ngClass]="{'valid': !ngFireUser.email.length>0}" type="email" class="form-control input-email" placeholder="Email Address">
+                  </div>
+                  
+                  <button (click)="addOrUpdateFireStoreUser()" [disabled]="ngFireUser.name.length==0" type="button" class="btn btn-primary submit-btn">Done</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>

@@ -1,0 +1,126 @@
+<div class="row" *ngIf="card" [ngClass]="{'hide': cardFilterType=='new'}">
+    <div class="col-2 left-panel">
+        <div class="left-panel-inner">
+            <div class="menu-items">
+                <div *ngFor="let item of appPages; let i = index" (click)="selectedIndex=i" class="menu-item" [class.active]="selectedIndex == i">
+                    <div *ngIf="i==0" class="inner-wrapper">
+                        <div class="text">{{item.title}}</div>
+                        <div class="extra">
+                            <span class="total-text">{{tasksStats.assigned}} ASSIGNED</span>
+                            <span class="pending-text">{{tasksStats.pending}} PENDING</span>
+                        </div>
+                    </div>
+                    <div *ngIf="i==1" class="inner-wrapper">
+                        <div class="text">{{item.title}}</div>
+                        <div class="extra">
+                            <span class="total-text">{{note}} NOTES</span>
+                            <span class="pending-text">{{note - readNote}} UNREAD</span>
+                        </div>
+                    </div>
+                    <div *ngIf="i==2" class="inner-wrapper">
+                        <div class="text">{{item.title}}</div>
+                        <div class="extra">
+                            <span class="total-text">{{fileStats.total}} UPLOADED</span>
+                            <span class="pending-text">{{fileStats.new}} NEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="task-items">
+                <div class="tasks">
+                    <div class="task-stat">
+                        <label class="task-heading">
+                            All Task
+                        </label>
+                        <div class="all-task">
+                            <div class="completed">
+                                <lable class="task-circle all-pending" (click)="setFilterForTask('all-completed')">
+                                    {{tasksStats.totalCompleted}}
+                                </lable>
+                                <label>
+                                    Completed
+                                </label>
+                            </div>
+                            <div class="pending">
+                                <lable class="task-circle all-completed" (click)="setFilterForTask('all-pending')">
+                                    {{tasksStats.totalPending}}
+                                </lable>
+                                <label>
+                                    Pending
+                                </label>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="task-stat">
+                        <label class="task-heading">
+                            My Tasks
+                        </label>
+                        <div class="my-task">
+                            <div class="completed">
+                                <lable class="task-circle my-pending" (click)="setFilterForTask('my-completed')">
+                                    {{tasksStats.completed}}
+                                </lable>
+                                <label>
+                                    Completed
+                                </label>
+                            </div>
+                            <div class="pending">
+                                <lable class="task-circle my-completed" (click)="setFilterForTask('my-pending')">
+                                    {{tasksStats.pending}}
+                                </lable>
+                                <label>
+                                    Pending
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="members">
+                    <label class="member-heading">
+                        Members
+                    </label>
+                    <div class="member-list">
+                        <div class="user" *ngFor="let user of allParticipant">
+                            <div class="img-container">
+                                <img class="user-img" *ngIf="user.status === 2" appImgFallback="assets/images/user1.svg" src="{{user.profileImage}}">
+                                <img class="user-img" *ngIf="user.status === 1" src="../../../assets/images/invited_only_user.svg">
+                                <img class="admin-tag" *ngIf="user.admin" src="../../../assets/images/tag_admin.svg">
+                            </div>
+                            <span class="user-name">{{user.name}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="horizon-items" *ngIf="adminRole">
+                <div *ngFor="let item of cardActionPages; let i = index" (click)="selectedOpIndex=i" class="horizon-item">
+                    <div class="inner-wrapper" (click)="cardAction(item, card)">
+                        <div class="text">{{item.title}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="activities">
+                <div class="title">Activity</div>
+                <div class="activity-scroller">
+                    <div class="activity" *ngFor="let activity of activities">
+                        <div class="text" [innerHTML]="activity.messageHTML"></div>
+                        <div class="day-time">{{activity.timestamp}}</div>
+                    </div>
+                </div>
+                <div *ngIf="showRecentLoading" class="loading-indicator-wrapper">
+                    <div class="spinner-wrapper">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-10 right-panel">
+        <app-tasks *ngIf="selectedIndex==0" [projectId]="projectId" [taskId]="taskId" [filterString]="filterString"></app-tasks>
+        <app-notes *ngIf="selectedIndex==1" [projectId]="projectId"></app-notes>
+        <app-files *ngIf="selectedIndex==2" [projectId]="projectId"></app-files>
+    </div>
+</div>
+<!--<div *ngIf="cardFilterType=='new' && isEmpty" class="no-new-card-view">
+    There is no new invitation for a card!
+</div>-->

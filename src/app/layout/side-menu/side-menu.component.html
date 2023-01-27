@@ -1,0 +1,6 @@
+<div class="menu-items">
+    <div *ngFor="let item of appPages; let i = index" (click)="onMenuItemClick(item)" class="menu-item" [class.active]="selectedIndex == i">
+        <div class="icon fa" [ngClass]="item.icon"></div>
+        <div class="text">{{item.title}}</div>
+    </div>
+</div>

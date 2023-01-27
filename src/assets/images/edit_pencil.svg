@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <g id="Component_201_1" data-name="Component 201 – 1" transform="translate(2.152 2)">
+    <g id="Ellipse_185" data-name="Ellipse 185" transform="translate(-0.152)" fill="#294658" stroke="#fff" stroke-width="2">
+      <circle cx="16" cy="16" r="16" stroke="none"/>
+      <circle cx="16" cy="16" r="17" fill="none"/>
+    </g>
+    <path id="Icon_feather-edit-2" data-name="Icon feather-edit-2" d="M15.1,3.926a2.282,2.282,0,0,1,3.228,3.228L7.438,18.047,3,19.257l1.21-4.438Z" transform="translate(5.267 4.746)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>

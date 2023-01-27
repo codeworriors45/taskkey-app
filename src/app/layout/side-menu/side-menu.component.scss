@@ -1,0 +1,42 @@
+:host {
+    transition: all .5s ease-in-out;
+    
+    &.hide {
+        margin-left: -260px;
+    }
+}
+
+
+.menu-items {
+    padding-right: 20px;
+
+    .menu-item {
+        padding: 10px 15px;
+        border-left: 4px solid transparent;
+        color: #294658;
+        display: flex;
+        align-items: center;
+        border-bottom-right-radius: 4px;
+        border-top-right-radius: 4px;
+        cursor: pointer;
+
+        &.active {
+            background-color: #F4F5F6;
+            border-left: 4px solid #294658;
+
+            .icon {
+                color: #294658;
+            }
+        }
+
+        .icon {
+            color: #A7C2CC;
+            font-size: 24px;
+        }
+        .text {
+            padding-left: 20px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+    }
+}

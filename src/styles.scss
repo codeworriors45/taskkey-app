@@ -1,0 +1,294 @@
+@import "assets/css/font-awesome.min.css";
+@import '~src/themes/variables.scss';
+@import "bootstrap";
+@import 'ngx-bootstrap/datepicker/bs-datepicker.css';
+@import "assets/css/style.css";
+@import '~@ctrl/ngx-emoji-mart/picker';
+
+.bs-datepicker-body table td.week span 
+{
+  color: #294658 !important; 
+}
+
+.bs-datepicker-body table td span.selected,
+.bs-datepicker-head,
+.bs-datepicker-head, .bs-datepicker button:active,
+.bs-datepicker-body table td.selected span,
+.bs-datepicker-body table td span[class*="select-"]:after,
+.bs-datepicker-body table td[class*="select-"] span:after,
+.bs-datepicker-body table td.active-week span:hover 
+{
+  background-color: #294658 !important; 
+}
+
+.carousel-control-next, .carousel-control-prev {
+    width: unset;
+	color: #294658;
+	opacity: 1;
+}
+
+.carousel-control-prev {
+    left: -40px;
+}
+
+.carousel-control-next {
+    right: -40px;
+}
+
+.carousel-control-next-icon {
+    background-image: url("assets/images/carousel-next.svg");
+}
+.blank-bg.nightTimeBG .carousel-control-next-icon {
+    background-image: url("assets/images/carousel-next-night.svg") !important;
+}
+.carousel-control-prev-icon {
+    background-image: url("assets/images/carousel-prev.svg");
+}
+.blank-bg.nightTimeBG .carousel-control-prev-icon {
+    background-image: url("assets/images/carousel-prev-night.svg") !important;
+}
+
+.carousel-item .item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.space-arround.carousel-item .item {
+    justify-content: space-evenly;
+    
+    .card-container {
+        flex: 0;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+
+.app-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    box-shadow: 0px 1px 6px #a7c2cc6b;
+    background: #fff;
+    height: $navbar-height;
+}
+
+.grid-view {
+    display: flex;
+    height: 100%;
+
+    .side-menu {
+        width: 260px;
+        background-color: #fff;
+        margin-top: $navbar-height;
+        z-index: 999;
+        padding-top: 50px;
+        //margin-left: -200px;
+    }
+    .page-container-outer {
+        flex: 1;
+        background-color: $background-color-default;
+        position: relative;
+    }
+}
+
+.page-container {
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: $navbar-height;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    & > *:not(router-outlet):not(.footer) {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: transparent;
+    
+        & > .page-content {
+            flex: 1;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+
+            .content-wrapper {
+                display: block;
+                &.full-screen {
+                    flex: 1;
+                }
+                &.content-center {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+            }
+        }
+
+        & > .page-footer {
+            padding: 25px 0;
+            text-align: center;
+            font-size: 11px;
+            color: #040404;
+    
+            span {
+                color: #67318D;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .footer {
+        padding: 5px 0;
+        text-align: center;
+        font-size: 11px;
+        color:red;
+    
+        span {
+            color: #67318D;
+            cursor: pointer;
+        }
+    }
+}
+
+@media screen and (min-width: 640px) {
+    .page-content {
+        padding: 30px 25px !important;
+    }
+}
+
+.form-input-wrapper {
+    width: inherit;
+    position: relative;
+    margin-bottom: 10px;
+
+    &.flat-input .input-field {
+        border: none;
+        border-radius: 0;
+        border-bottom: 1px solid #D3E0E5;
+    }
+
+    label {
+        font-family: "Futura Std";
+        font-size: 15px;
+        margin-bottom: 0px;
+        color: #294658;
+        padding-bottom: 5px;
+        width: 100%;
+        line-height: 1;
+    }
+
+    img {
+        margin-right: 15px;
+        vertical-align: text-top;
+    }
+
+    .label-required:after {
+        content: "*";
+    }
+
+    .input-field {
+        border-radius: 5px;
+        border-width: 2px;
+        border-color: #06050536;
+        width: 100%;
+        padding: 7px 10px;
+        font-size: 15px;
+        font-family: "Futura Std";
+        line-height: 1;
+        resize: none;
+    }
+
+    .disabled {
+        background-color: #d9dcdf;
+        
+        &:hover {
+            cursor: not-allowed;
+        }
+    }
+
+    .error-cont-info-wrapper {
+        display: flex;
+        align-items: center;
+
+        .errors {
+            flex: 1;
+        }
+        .input-count {
+            font-size: 12px;
+            color: #9c9c98;
+            opacity: 0.8;
+        }
+    }
+    .floated-icon {
+        position: absolute;
+        top: 10px;
+        font-size: 20px;
+        color: #324755;
+    }
+    label ~ .floated-icon {
+        top: 34px;
+    }
+    .float-right {
+        right: 10px;
+    }
+    .float-left {
+        left: 10px;
+    }
+
+    .floated-icon.float-left ~ .input-field {
+        padding-left: 40px;
+    }
+
+}
+
+.form-notes:before {
+    content: "*";
+}
+
+.form-notes {
+    font-size: 14px;
+    float: right;
+    color: #294658;
+}
+
+.error-message {
+    font-size: 12px;
+    color: $danger;
+}
+
+.padding-zero {
+    padding: 0px;
+}
+
+bs-dropdown-container {
+    //transform: translate3d(708px, 451px, 0px) !important;
+    left: -8px !important;
+}
+
+@media screen and (max-width: 1700px) {
+    .hide-carousal-left-arrow {
+        .menu-items {
+            .menu-item {
+                padding: 10px 3px 10px 8px;
+                .inner-wrapper {
+                    justify-content: flex-start;
+                    flex-direction: column;
+                }
+
+                .extra {
+                    .total-text, .pending-text {
+                        font-size: 10px;
+                    }
+                }
+            }
+        }
+    }
+}

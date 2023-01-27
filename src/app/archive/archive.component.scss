@@ -1,0 +1,265 @@
+@import '~src/themes/variables.scss';
+* {
+    box-sizing: border-box;
+}
+
+.search-area {
+    width: 100%;
+
+    .archive-search {
+        justify-content: space-between;
+        display: flex;
+        padding: 0px 10px;
+        align-items: center;
+        font-family: "Futura STD";
+        margin-left: 30px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+
+    
+        .search-area {
+            border: 1px solid $primary;
+            border-radius: 20px;
+            display: flex;
+            padding: 5px;
+            .search {
+                border: none;
+                width: 90%;
+                background-color: transparent;
+    
+                ::placeholder {
+                    font-size: 25px;
+                    letter-spacing: .5px;
+                  }
+            }
+
+            .spinners {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+                height: 25px;
+                align-items: center;
+                margin: 0 1rem;
+              }
+              
+              .spin_border .spinner_circle div {
+                border: 0.2rem solid #8D9CA6;
+                width: 25px;
+                height: 25px;
+                border-top-color: #294759;
+                border-left-color: #294759;
+                border-radius: 50%;
+                -webkit-animation: spinner 1s linear 0s infinite;
+                        animation: spinner 1s linear 0s infinite;
+              }
+              @keyframes spinner {
+                from {
+                  transform: rotate(0deg);
+                }
+                to {
+                  transform: rotate(360deg);
+                }
+              }
+        }
+    
+        .create-chat {
+            img {
+                width: 25px;
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+.grid-container {
+    // display: grid;
+    // grid-template-columns: auto auto auto auto auto;
+    // grid-gap: 10px;
+    padding: 10px;
+    margin-left: 30px;
+  }
+  
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #F0F0F0;
+    text-align: center;
+    font-size: 30px;
+    width: 270px;
+    height: 80px;
+    border-radius: 7px;
+    margin: 0px auto;
+
+
+
+    .c-body {
+        display: flex;
+        align-items: center;
+
+        &.border-bottom {
+            border-bottom: 1px solid #F0F0F0;
+            padding: 5px;
+        }
+
+        .circle {
+            height: 30px;
+            width: 30px;
+            border-radius: 50px;
+            background-color: #ECDA6C;
+            color: #415A6A;
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-family: 'Futura PT';
+            letter-spacing: 0.5px;
+            margin-right: 3px;
+
+            img {
+                width: 100%;
+            }
+
+            span {
+                margin-left: 2px;
+            }
+        }
+
+        .title {
+            flex: 1;
+            font-size: 12px;
+            font-weight: bold;
+            max-height: 40px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+
+        .unarchive-btn {
+            width: 70px;
+            height: 20px;
+            border: 1px solid #000000;
+            border-radius: 15px;
+            font-size: 11px;
+            cursor: pointer;
+
+            &:hover {
+                color: #FFFFFF;
+                background-color: $primary;
+            }
+        }
+        .created-at {
+            font-size: 10px;
+            color: #B7B7B7;
+        }
+    }
+    .c-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 30px;
+        padding: 10px;
+
+        &.active-card {
+            padding-top: 10px;
+        }
+
+        .suscribers {
+            line-height: 1;
+            display: flex;
+            align-items: center;
+
+            img {
+                height: 20px;
+                width: 20px;
+                border-radius: 50%;
+                margin-left: -10px;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+            .counter {
+                color: #8797A1;
+                font-size: 14px;
+                padding-left: 3px;
+
+                span {
+                    font-size: 12px;
+                    font-family: "Futura Std";
+                }
+            }
+        }
+
+        .selected-project-suscribers {
+            line-height: 1;
+            display: flex;
+            align-items: center;
+
+            .participant-info-wrapper {
+                display: flex;
+                align-items: center;
+
+                img {
+                    height: 20px;
+                    width: 20px;
+                    border-radius: 50%;
+                    margin-left: -10px;
+    
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+                $font-size: 10px;
+                $line-height: 1;
+                $lines-to-show: 2;
+    
+                .user-name {
+                    max-width: 32px;
+                    margin-left: 2px;
+                    margin-right: 2px;
+                    display: block;
+                    display: -webkit-box;
+                    max-height: $font-size*$line-height*$lines-to-show;
+                    font-size: $font-size;
+                    line-height: $line-height;
+                    -webkit-line-clamp: $lines-to-show;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                    text-transform: capitalize;
+                }
+            }
+            
+            .counter {
+                color: #8797A1;
+                font-size: 14px;
+                padding-left: 3px;
+
+                span {
+                    font-size: 12px;
+                    font-family: "Futura Std";
+                }
+            }
+        }
+
+        .timeline {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .btn-wrapper {
+            .btn {
+                height: 30px;
+                line-height: 1;
+                width: 70px;
+                text-align: center;
+                padding: 0 !important;
+                margin-right: 10px;
+
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+  }

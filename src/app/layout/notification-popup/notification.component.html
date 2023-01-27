@@ -1,0 +1,30 @@
+<div class="scroller">
+    <div *ngFor="let notification of allNotifications; let i=index" class="notification-item">
+        <div *ngIf="notification.collection=='chat'" class="item-inner">
+            <div class="project-name">{{notification.projectName}}</div>
+            <div class="message">{{notification.userName}}: "<span [innerHTML]="notification.decryptedComment"></span>" <span *ngIf="notification.totalCount > 1" class="bold">+ {{notification.totalCount-1}} {{notification.totalCount > 2 ? 'messages': 'message'}}</span></div>
+            <div *ngIf="notification._timestamp" class="created-at">{{notification._timestamp}}</div>
+        </div>
+        <div *ngIf="notification.collection!='chat'" class="item-inner clickable" (click)="showRelatedView(notification)">
+            <div *ngIf="notification.collection=='card'" class="project-name">{{notification.name}}</div>
+            <div *ngIf="notification.collection=='comment'" class="project-name">{{notification.projectName}}</div>
+            <div *ngIf="notification.collection=='comment'" class="message">{{notification.userName}} commented: "<span [innerHTML]="notification.decryptedComment"></span>" in task <span class="bold">"{{notification.taskName}}"</span> <span class="bold" *ngIf="notification.totalCount > 1">+ {{notification.totalCount-1}} {{notification.totalCount > 2 ? 'messages': 'message'}}</span></div>
+            <div *ngIf="notification.collection=='card'" class="message" [innerHTML]="notification.decryptedComment"></div>
+            <div *ngIf="notification._timestamp" class="created-at">{{notification._timestamp}}</div>
+        </div>
+    </div>
+    <div class="icon-count-wrapper">
+        <div class="count-wrapper">
+            {{newNotification}}
+        </div>
+        <i (click)="closeNotificationPopup()" class="fa fa-chevron-down"></i>
+    </div>
+    <div *ngIf="showLoading" class="loading-indicator-wrapper">
+        <div class="spinner-wrapper">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="allNotifications.length>0" class="clear-all-btn" (click)="clearAllNotificatonFromLocalNRemote()">Clear all</div>

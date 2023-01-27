@@ -1,0 +1,73 @@
+:host {
+    //margin-top: 20px;
+    flex: 1;
+} 
+.no-new-card-view {
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: -20px;
+    height: 109px;
+    margin-bottom: 20px;
+}
+.flex-row {
+    display: flex;
+}
+
+.grid-view {
+    flex: 1;
+    flex-direction: column;
+
+    .flex-row {
+        flex: 1;
+    }
+
+    .content-box {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 6px;
+        color: #294658;
+        height: 100%;
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .col {
+        padding-right: 0;
+        padding-left: 0;
+    }
+    .row-box-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        & > .content-box {
+            flex: 1;
+            margin-bottom: 15px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.empaty-sreen-msg {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    height: 100%;
+
+    .content-box {
+        font-family: "Futura Std";
+        font-size: 20px;
+        font-weight: 600;
+        width: 550px;
+        letter-spacing: .5px;
+
+        &.nightTimeBG {
+            color: #fff;
+        }
+    }
+}

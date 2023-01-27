@@ -1,0 +1,422 @@
+<div class="modal-body row">
+    <div class="col-md-3 border-right">
+        <div role="header" class="heading">
+            <div class="heading-item">{{createCradLabel}} Card</div>
+        </div>
+        <ul class="tab-items">
+            <li class="tab-item" [ngClass]="{'active': screenSwitchArray[0]}">
+                <div class="text" id="newcard" (click)="populateSettingsScreen($event)">{{createCradLabel}} Card</div>
+            </li>
+            <li class="tab-item" *ngIf="!selectedCard" [ngClass]="{'active': screenSwitchArray[1]}">
+                <div class="text" id="choosetemplate" (click)="populateSettingsScreen($event)">Choose Template</div>
+            </li>
+        </ul>
+        
+    </div>
+    <div class="col-md-9 padding-zero">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="closePopupAndRemoveParamFromURL()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div *ngIf="screenSwitchArray[0]">
+            <form [formGroup]="createCardForm" *ngIf="showCreateCard">
+                <div class="image-area">
+                    <div class="row input-row">
+                        <img class="user-image" [src]="cardImageUrl ? cardImageUrl : defaultImage">
+                        <div *ngIf="projectPicLoader" class="spin_border">
+                            <div class="spinners">
+                              <div class="spinner6">
+                                <div></div>
+                              </div>
+                            </div>
+                        </div>
+                        <div>
+                            <img class="edit-pencil" src="assets/images/edit_pencil.svg" (click)="fileInput.click()">
+                            <input #fileInput type="file" style="width: 30px; display: none;" (change)="uploadProjectPicture($event)"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="selected-template" *ngIf="appliedTemplate">
+                    <div class="template-attributes">
+                        Using Template 
+                        <div class="template-name">{{appliedTemplate.project.name}}</div>
+                        <button type="button" class="close" aria-label="Close" (click)="removeAppliedTemplate()">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="details-area">
+                    <div class="row">
+                    <div class="col-8">
+                        <div class="form-input-wrapper">
+                                <label class="label label-required">Card Name</label><br>
+                                <input class="input-field" id="cardname" type="text" autocomplete="off" maxlength="60" formControlName="cardName"/>
+                                <div class="error-cont-info-wrapper">
+                                    <div class="errors">
+                                        <div class="error-message" *ngIf="createCardForm.controls['cardName'].invalid">
+                                            <span *ngIf="createCardSubmitted && createCardForm.controls.cardName.errors?.required">Card Name is required.</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-count">{{createCardForm.value.cardName.length}}/60</div>
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-8">
+                        <div class="form-input-wrapper">
+                            <label class="label">Description</label><br>
+                            <textarea class="input-text" type="text" id="carddescription" maxlength="140" formControlName="description"></textarea>
+                            <div class="error-cont-info-wrapper">
+                                <div class="errors">
+                                    <div class="input-count" style="float: right;">{{createCardForm.value.description.length}}/140</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <label class="form-notes">Required Fields</label><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-8">
+                        <div class="person-involved">
+                                <label class="toggel-label">Who's Involved?</label><br>
+                                <div class="involved-list">
+                                    <div>
+                                        <div class="img-container" *ngFor="let item of (involvedPersonsKey| keyvalue)?.concat().reverse(); let i = index">
+                                            <img class="involved-person" appImgFallback="assets/images/user1.svg" [src]="item.value.profileImage" />
+                                            <img class="admin-tag" *ngIf="(item.value?.admin)" src="assets/images/tag_admin.svg">
+                                        </div>
+                                    </div>
+                                    <img class="plus-button" src="assets/images/plus_button.svg" (click)="displayInvitePeopele()">
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <button class="create-button" type="button" (click)="saveProject()">{{selectedCard ? "Save" : "Create"}} card</button>
+                        </div>
+                    </div>
+                </div> 
+            </form>
+            <div id="inviteUserContainer" *ngIf="!showCreateCard">
+                <div class="header-area">
+                    <div class="row-left">
+                        <div class="col-8">
+                            <div class="create-card-head">
+                                    <img src="assets/images/create_card_back_button.svg" (click)="displayCreateCard()">
+                                    <label class="label heading-font">Card Members</label>
+                            </div>
+                        </div>
+                    </div>
+                   <!-- <div class="row-left">
+                        <div class="col-10">
+                            <div class="heading-input-wrapper">
+                                    <img src="assets/images/search_symbol.svg">
+                                    <input class="search-user" id="userName" placeholder="Search to invite members" type="text" autocomplete="off" [(ngModel)]="searchText" (keyup)="onKeyUp($event)" (keydown)="onKeyDown()"/>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="users-area">
+                    <div class="search-tabs">
+                        <div class="tab" [ngClass]="{'active': selectedTab==0}" (click)="setSelectedTab(0)">
+                            <!--<div class="icon-warp">
+                                <i class="fas fa-phone-alt"></i> 
+                            </div>-->
+                            <img src="assets/images/contact-tab-icon.png" class="icon-img">
+                            <div class="title">Contacts</div>
+                        </div>
+                        <div class="tab" [ngClass]="{'active': selectedTab==1}" (click)="setSelectedTab(1)">
+                            <!--<div class="icon-warp">
+                                <i class="fas fa-envelope"></i>
+                            </div>-->
+                            <img src="assets/images/search-tab-icon.png" class="icon-img">
+                            <div class="title">Search</div>
+                        </div>
+                        <div class="tab" [ngClass]="{'active': selectedTab==2}" (click)="setSelectedTab(2)">
+                            <!--<div class="icon-warp">
+                                <i class="fas fa-history"></i>
+                            </div>-->
+                            <img src="assets/images/recent-tab-icon.png" class="icon-img">
+                            <div class="title">Frequent</div>
+                        </div>
+                    </div>
+                    <form [formGroup]="serchUserForm">
+                        <div class="form-input-wrapper mb-0">
+                            <img class="floated-icon float-right search-icon" src="assets/images/search_symbol.svg" (click)="searchManual()">
+                            <input *ngIf="selectedTab == 0" class="input-field border-bottom" type="text" autocomplete="off" 
+                                formControlName="searchStr1" (keydown)="onKeyDown()" placeholder="Search to invite members"/>
+                            <div class="error-message" *ngIf="selectedTab==0 && serchUserForm.controls['searchStr1'].invalid && serchUserForm.controls['searchStr1'].touched">
+                                <span *ngIf="serchUserForm.controls.searchStr1.errors?.invalidStr">Enter full phone number (with plus & country code) and without space</span>
+                            </div>
+                            <input *ngIf="selectedTab==1" class="input-field  border-bottom" type="text" autocomplete="off" 
+                                formControlName="searchStr2" (keydown)="onKeyDown()" placeholder="Search to invite members"/>
+                            <div class="error-message" *ngIf="selectedTab == 1 && serchUserForm.controls['searchStr2'].invalid && serchUserForm.controls['searchStr2'].touched">
+                                <span *ngIf="serchUserForm.controls.searchStr2.errors?.invalidStr">Invalid Email!</span>
+                            </div>
+                            <input *ngIf="selectedTab==2" class="input-field  border-bottom" type="text" autocomplete="off" 
+                                formControlName="searchStr3" (keydown)="onKeyDown()" placeholder="Search to invite members"/>
+                        </div>
+                    </form>
+                    <div *ngIf="userSearchLoading" class="skeleton">
+                        <p class="line"></p>
+                    </div>
+                    <div class="scroll-wrap">                       
+                        <!--<div *ngFor="let item of usersArray; let i = index">
+                            <div class="user-container">
+                                <div class="details-area">
+                                    <div class="cont-image">
+                                        <img appImgFallback="assets/images/user1.svg" [src]="item.profileImage" />
+                                    </div>
+                                    <div class="cont-details">
+                                        <div>
+                                            <label class="user-name">{{item.name}}</label>
+                                            <label class="user-name">{{item.lastName}}</label>
+                                        </div>
+                                        <label class="user-role">{{item.admin ? 'Admin': 'Member'}} <span *ngIf="userDetails.userId == item.userId">(me)</span></label>
+                                    </div>
+                                </div>
+                                <div *ngIf="item.involved && item.isAllowed">
+                                    <div class="btn-group" dropdown placement="bottom right">
+                                        <div id="button-basic" dropdownToggle class="dropdown-toggle cont-btn" aria-controls="dropdown-basic">
+                                                {{item.involved ? 'Edit' : initalStateInvite}}
+                                        </div>
+                                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right"
+                                            role="menu" aria-labelledby="button-basic">
+                                          <li role="menuitem"><a id="adminRole" class="dropdown-item content" (click)="assigningRole='admin';roleSelected(item)">{{item.admin ? 'Remove Admin' : 'Make Admin'}}</a></li>
+                                          <li role="menuitem"><a class="dropdown-item content" (click)="assigningRole='remove';roleSelected(item)">Remove User</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div *ngIf="!item.involved && item.isAllowed">
+                                    <div id="btn-{{item.userId}}" class="cont-btn" (click)="addPerson(item)">{{item.involved ? 'Cancel' : initalStateInvite}}</div>
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div *ngFor="let item of usersArray; let i = index" class="user-info-list-item">
+                            <div class="user-info-wrapper">
+                                <img appImgFallback="assets/images/user1.svg" class="user-img" [src]="item.profileImage" />
+                                <div class="user-name-role">
+                                    <div class="name">{{item.fullName}} <span *ngIf="item.involved">({{item.admin ? 'Admin': 'Member'}})</span></div>
+                                    <!--<div class="role">{{item.admin ? 'Admin': 'Member'}} <span *ngIf="userDetails.userId == item.userId">(me)</span></div>-->
+                                    <div class="inline-icon-text" *ngIf="item.phone">
+                                        <div class="icon-warp">
+                                            <i class="fas fa-phone-alt"></i> 
+                                        </div>
+                                        <div class="infor">{{item.phone}}</div>
+                                    </div>
+                                    <div class="inline-icon-text" *ngIf="item.email">
+                                        <div class="icon-warp">
+                                            <i class="far fa-envelope"></i> 
+                                        </div>
+                                        <div class="infor">{{item.email}}</div>
+                                    </div>
+                                </div>
+                            
+                            </div>
+                            <!--<div class="contact-detail">
+                                <div *ngIf="item.phone">
+                                    <div class="icon-warp">
+                                        <i class="fas fa-phone-alt"></i> 
+                                    </div>
+                                    <div class="infor">{{item.phone}}</div>
+                                </div>
+                                <div *ngIf="item.email">
+                                    <div class="icon-warp">
+                                        <i class="far fa-envelope"></i> 
+                                    </div>
+                                    <div class="infor">{{item.email}}</div>
+                                </div>
+                            </div>-->
+
+                            <div *ngIf="item.involved && item.isAllowed" class="btn-group" dropdown placement="bottom right">
+                                <div dropdownToggle class="dropdown-toggle action-btn" aria-controls="dropdown-basic">
+                                    Edit
+                                </div>
+                                <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
+                                  <li role="menuitem"><a id="adminRole" class="dropdown-item dropdown-menu-item" (click)="assigningRole='admin';roleSelected(item)">{{item.admin ? 'Remove Admin' : 'Make Admin'}}</a></li>
+                                  <li role="menuitem"><a class="dropdown-item dropdown-menu-item" (click)="assigningRole='remove';roleSelected(item)">Remove User</a></li>
+                                </ul>
+                            </div>
+                            <div *ngIf="!item.involved && item.isAllowed">
+                                <div id="btn-{{item.userId}}" class="action-btn" (click)="addPerson(item)">{{initalStateInvite}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="project-templates" *ngIf="screenSwitchArray[1]">
+            <div *ngIf="!templateDetails">
+                <div class="col short-filter-wrapper">
+                    <div dropdown [ngClass]="{'sort-applied': sortBy!=''}">
+                        <div class="shorting-wrapper">
+                            <i class="fa fa-sort static-icon" (click)="toogleSortOrder()"></i>
+                            <div dropdownToggle>
+                                <div *ngIf="sortBy=='title' || sortBy==''" class="text-static">Sort: Title</div>
+                                <div *ngIf="sortBy=='createdBy'" class="text-static">Sort: Created By</div>
+                            </div>
+                        </div>
+                        <div class="menu-items left dropdown-menu" role="menu" *dropdownMenu>
+                            <div role="menuitem" (click)="sortBy='title';sortTemplate()" class="menu-item" [ngClass]="{'active': sortBy=='title' || sortBy==''}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Title</div>
+                            </div>
+                            <div role="menuitem" (click)="sortBy='createdBy';sortTemplate()" class="menu-item" [ngClass]="{'active': sortBy=='createdBy'}">
+                                <div class="icon fa fa-check"></div>
+                                <div class="text">Created By</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                
+                <div class="template-list">
+                    <div class="template" *ngFor="let template of projectTemplates" (click)="openTemplateDetails(template)">
+                        <div class="temp-left">
+                            <img appImgFallback="assets/images/template_rect.svg" src="assets/images/template_rect.svg">
+                        </div>
+                        <div class="temp-mid">
+                            <label class="temp-heading">{{template.project.name}}</label>
+                            <label class="creator">{{template.creatorName}}</label>
+                            <div class="details">
+                                <label>{{template.downloads}}</label>
+                                <img src="assets/images/downloads_icon.svg">
+                            </div>
+                        </div>
+                        <div class="temp-right">
+        
+                        </div>
+        
+                    </div>
+                </div>
+            </div>
+
+            <div class="template-details" *ngIf="templateDetails">
+                <div class="details-header">
+                  <div class="head-left">
+                    <img appImgFallback="assets/images/template_rect.svg" src="assets/images/template_rect.svg">
+                  </div>
+                  <div class="head-mid">
+                    <label class="temp-heading">{{selectedTemplate.project.name}}</label>
+                    <label class="creator">{{selectedTemplate.creatorName}}</label>
+                    <div class="details">
+                      <label>{{selectedTemplate.downloads}}</label>
+                      <img src="assets/images/downloads_icon.svg">
+                    </div>
+                  </div>
+
+                  <div class="head-right">
+                    <div class="use-template" [ngClass]="{'template-selected': (selectedTemplate.id === appliedTemplate?.id)}" (click)="useTemplate()">
+                      Use Template
+                    </div>
+                  </div>
+                </div>
+
+                <div class="template-carousal">
+                  <div class="scrolling-wrapper" (wheel)="onWheel($event)" #scrollWrapper>
+                    <div class="card labels">
+                      <div class="content">
+                        <div class="title">
+                          Files
+                        </div>
+                        <label *ngFor="let file of selectedTemplate.files">
+                          {{file.name}}
+                        </label>
+                      </div>
+                    </div>
+                    <div class="card project">
+                        <div class="content">
+                            <div class="title">
+                                <img class="acrony-image" appImgFallback="assets/images/user1.svg" [acrony]="PC" [src]="selectedTemplate.project.image">
+                                <div>
+                                    <span>{{selectedTemplate.project.name}}</span>
+                                </div>
+                              </div>
+                              <div class="temp-data">
+                                  <div class="data-left">
+                                      <div class="count">
+                                          <label class="label-count">
+                                            {{selectedTemplate.tasks?.length || 0}}
+                                          </label>
+                                          <label class="label-type">
+                                            TASKS
+                                          </label>
+                                      </div>
+                                      
+                                      <div class="data-bot">
+                                        <div class="count">
+                                            <label class="label-count">
+                                              {{selectedTemplate.todos?.length || 0}}
+                                            </label>
+                                            <label class="label-type">
+                                              TO-DO
+                                            </label>
+                                        </div>
+                                      </div>
+        
+                                  </div>
+                                  <div class="data-right">
+                                    <div class="count">
+                                        <label class="label-count">
+                                          {{selectedTemplate.files?.length || 0}}
+                                        </label>
+                                        <label class="label-type">
+                                          FILES
+                                        </label>
+                                    </div>
+                                    <div class="data-bot">
+                                        <div class="count">
+                                            <label class="label-count">
+                                              {{selectedTemplate.notes?.length || 0}}
+                                            </label>
+                                            <label class="label-type">
+                                              NOTES
+                                            </label>
+                                        </div>
+                                    </div>
+                                  </div>
+                              </div>
+                        </div>
+                    </div>
+                    <div class="card labels">
+                        <div class="content">
+                            <div class="title">
+                              Tasks
+                            </div>
+                            <label *ngFor="let task of selectedTemplate.tasks">
+                              {{task.name}}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="card labels">
+                        <div class="content">
+                            <div class="title">
+                                Notes
+                            </div>
+                            <label *ngFor="let note of selectedTemplate.notes">
+                            {{note.title}}
+                            </label>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="template-description">
+                    <span>
+                        Description
+                    </span>
+                    <span>
+                        {{selectedTemplate.project.description}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

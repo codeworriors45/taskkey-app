@@ -1,0 +1,220 @@
+<div class="chat">
+    <div class="flex-chat">
+        <div class="chat-list">
+            <div class="chat-header">
+                <div class="header-text">
+                    Chat
+                </div>
+            </div>
+            <div class="chat-search">
+                <div class="search-area">
+                    <img class="search-icon" src="assets/images/small_search_symbol.svg">
+                    <input class="search" id="chatName" placeholder="Search Chat" type="text" (keyup)="onKeyUp($event)" (keydown)="onKeyDown()" autocomplete="off"/>
+                </div>
+                <!-- <div class="create-chat">
+                    <img class="new-chat" src="assets/images/write_text.svg">
+                </div>         -->
+            </div>
+            <div class="chats">
+                <div class="singleChat" *ngFor="let chat of chatsData;let i = index" (click)="processProjectChat(chat)">
+                    <div class="chat-left">
+                        <img class="acrony-image" appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [acrony]="chat.acronyName" [src]="chat.image">
+                        <div class="chat-details">
+                            <div class="project-name">
+                                {{chat.name}}
+                            </div>
+                            <div class="pop-message" *ngIf="chat.displayName">
+                                {{chat.displayName}}: {{chat.displayMessage}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-right">
+                        <div class="unread-count" *ngIf="chat.unreadCount > 0">
+                            <div class="count">
+                                {{chat.unreadCount}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="project-chats" *ngIf="selectedChat">
+            <div class="chat-header">
+                <div class="header-text">
+                    <img class="acrony-image" [appImgFallback]="selectedChat.fallbackImg" [acrony]="selectedChat.acronyName" [src]="selectedChat.image === '' ? selectedChat.fallbackImg : selectedChat.image">
+                    <div class="project-chat">
+                        <div class="project-name">
+                            {{selectedChat.name}}
+                        </div>
+                        <div class="project-persons" *ngIf="selectedChat.involvedPerson.user.length > 3">
+                            <div class="person-name" *ngFor="let person of selectedChat.involvedPerson.user | slice:0:3; let i=index">
+                                <label *ngIf="i !== 2">{{person}},</label>
+                                <label *ngIf="i == 2">{{person}}</label>
+                            </div>
+                            <div class="person-name" *ngIf="selectedChat.involvedPerson.user.length > 3" class="counter">
+                                + {{selectedChat.involvedPerson.user.length - 3}} <span>others</span>
+                            </div>
+                        </div>
+                        <div class="project-persons" *ngIf="selectedChat.involvedPerson.user.length <= 3">
+                            <div class="person-name">
+                                {{selectedChat.involvedPerson.user.join(', ')}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-operations">
+                    <!-- <img class="chat-op" src="assets/images/more_icon.svg"> -->
+                    <!-- <img class="chat-op" src="assets/images/close_button.svg" (click)="closeChatBox()"> -->
+                    <i class="far fa-times-circle chat-op" (click)="closeChatBox()"></i>
+                </div>
+            </div>
+            <div class="chat-divison" #projectChat (scroll)="checkScrollTop($event)">
+                <div *ngIf="chatNotLoaded" class="spin_border">
+                    <div class="spinners">
+                      <div class="spinner_circle">
+                        <div></div>
+                      </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedChat.chatPresent">
+                    <div *ngFor="let chats of (selectedChat.currentChats | keyvalue)">
+                        <div class="header" *ngIf="chats.key">
+                            <div *ngIf="chats.key === todayDate">
+                                Today
+                            </div>
+                            <div *ngIf="chats.key === yesterdayDate">
+                                Yesterday
+                            </div>
+                            <div *ngIf="(chats.key !== todayDate && chats.key !== yesterdayDate)">
+                                {{chats.key | date:'mediumDate'}}
+                            </div>
+                        </div>
+                        
+                        <div class="message" *ngFor="let chat of (chats.value).concat().reverse()">
+                            <div class="header">
+                                <div id="unreadMessage" *ngIf="(unreadMessageIndex | keyvalue).length > 0 && chat.id === unreadMessageIndex.id" #unreadMessage>
+                                    {{unreadMessageIndex.index + 1}} {{ unreadMessageIndex.index > 0 ? "Unread Messages" : "Unread Message" }}
+                                </div>
+                            </div>
+                            <div class="wrapper-left" [id]="chat.id" *ngIf="userDetails.userId !== chat.userId">
+                                <div class="others-chat">
+                                    <img class="others-chat-img" appImgFallback="assets/images/user1.svg" src="{{(selectedChat.involvedPerson.profiles[chat.userId])?.length > 0 ? selectedChat.involvedPerson.profiles[chat.userId] : 'assets/images/user1.png'}}">
+                                    <div class="others-chat-meseg">
+                                        <div class="chat-sender">
+                                            {{selectedChat.involvedPerson.names[chat.userId]}}
+                                        </div>
+                                        <div class="replied" *ngIf="chat.reply">
+                                            <div class="name">
+                                                {{selectedChat.involvedPerson.names[chat.reply.userId]}}
+                                            </div>
+                                            <div *ngIf="chat.reply.commentType === 1" class="reply" [innerHTML]="chat.repliedTo"></div>
+                                            <div *ngIf="chat.reply.commentType === 2 && chat.reply.fileUrl.length > 0" class="reply">
+                                                <img class="comment-img" src="{{chat.reply.fileUrl}}">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="chat.commentType === 2 && chat.fileUrl.length > 0">
+                                            <img class="comment-img" src="{{chat.fileUrl}}">
+                                        </div>
+                                        <div class="chat-core">
+                                            <div class="chat-message" [innerHTML]="chat.decryptedComment">
+                                            </div>
+                                            <div class="chat-stamp">
+                                                {{chat.miniStamp}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <div class="wrapper-right" [id]="chat.id" *ngIf="userDetails.userId === chat.userId">
+                                <div class="user-chat">
+                                    <div class="replied" *ngIf="chat.reply">
+                                        <div class="name">
+                                            {{selectedChat.involvedPerson.names[chat.reply.userId]}}
+                                        </div>
+                                        <div *ngIf="chat.reply.commentType === 1" class="reply" [innerHTML]="chat.repliedTo"></div>
+                                        <div *ngIf="chat.reply.commentType === 2 && chat.reply.fileUrl.length > 0" class="reply">
+                                            <img class="comment-img" src="{{chat.reply.fileUrl}}">
+                                        </div>
+                                    </div>
+                                    <div *ngIf="chat.commentType === 2 && chat.fileUrl.length > 0">
+                                        <img class="comment-img" src="{{chat.fileUrl}}">
+                                    </div>
+                                    <div class="chat-core">
+                                        <div class="chat-message" [innerHTML]="chat.decryptedComment"></div>
+                                        <div class="chat-stamp">
+                                            {{chat.miniStamp}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="no-chat" *ngIf="!(selectedChat.chatPresent)">
+                    <div style="text-align: center; font-size: 22px; font-weight: 600; margin-bottom: 15px;">
+                        It’s quiet in here
+                    </div>
+                    <div style="text-align: center;">
+                        Get the conversation going by writing a message to everyone!
+                    </div>
+                </div>
+            </div>
+            <div class="position-relative">
+                <div *ngIf="imagePreviewArray.length > 0" class="attachment-div">
+                    <div class="attachment" *ngFor="let img of imagePreviewArray">
+                        <img class="attach-img" src="{{img.url}}">
+                        <div *ngIf="attachmentProcessing" class="spin_border">
+                            <div class="spinners">
+                              <div class="spinner_circle">
+                                <div></div>
+                              </div>
+                            </div>
+                        </div>
+                        <i class="far fa-times-circle remove-icon" (click)="removeAttachment(img)"></i>
+                    </div>
+                </div>
+                <div *ngIf="showParticipantsMention" class="participants-mention-list">
+                    <div *ngIf="selectedChat.involvedPerson.mentionedDetails.length == 0" class="no-participant">
+                        No participant
+                    </div>
+                    <div *ngFor="let participant of selectedChat.involvedPerson.mentionedDetails" (click)="addParticipantInMentioned_N_ShowNameInChat(participant)" class="participant-list-item">
+                        <img  appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profile">
+                        <div class="fullName">
+                            {{participant.name}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="input-field-wrapper" >
+                <div class="input-field-inner">
+                  <i class="far fa-smile smile-icon" (click)="showEmojiMarket()"></i>
+                  <emoji-mart class="emoji-market" *ngIf="showEmojiPopup" [showPreview]="false" (emojiSelect)="addEmoji($event)" [excludeBeforeClick]="true" [exclude]="'i.smile-icon'" (clickOutside)="onClickedOutside($event)"></emoji-mart>
+                  <div #chatBox class="textarea" contenteditable="true" data-placeholder="Write a message..." (focus)="setMaxWidth()" (input)="onChatChange($event.target.innerText)" (keydown)="onChatSend($event)" (keyup)="onMessageTypeKeyUp($event)" (ngModel)="newChat">
+                  </div>
+                  <img src="assets/images/upload_pin.svg" (click)="fileInput.click()">
+                  <input #fileInput type="file" style="width: 30px; display: none;" (change)="sendPictureChat($event)" />
+                </div>
+                <div class="send-btn" (click)="addChat(selectedChat)">
+                  <i class="fa fa-paper-plane"></i>
+                </div>
+            </div>
+        </div>
+        <div class="project-chats-blank" *ngIf="!selectedChat">
+            <i class="far fa-times-circle chat-op pull-right" (click)="closeChatBox()"></i>
+            <div class="no-chat">
+                <div style="text-align: center; font-size: 22px; font-weight: 600; margin-bottom: 15px;">
+                    Chat with card members
+                </div>
+                <div style="text-align: center;">
+                    Click on a card from list and communicate with all card members.
+                </div>
+            </div>
+            <!-- <button type="button" class="close pull-right" aria-label="Close" (click)="closeChatBox()">
+                <span aria-hidden="true">&times;</span>
+            </button> -->
+        </div>
+    </div>
+    
+</div>

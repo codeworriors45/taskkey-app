@@ -1,0 +1,144 @@
+:host {
+    max-width: 600px;
+    min-width: 600px;
+    border: 2px solid #C6D9DE;
+    background-color: #fff;
+    border-top: none;
+    height: 400px;
+    position: relative;
+    font-family: 'Futura Std';
+    display: flex;
+    flex-direction: column;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.notification-item {
+    border-bottom: 1px solid #E8EFF1;
+
+    &:first-child {
+        .item-inner {
+            padding-right: 80px;
+        }
+    }
+
+    &:last-child {
+        border: none;
+    }
+
+    .item-inner {
+        min-height: 50px;
+        padding: 5px;
+    }
+
+    .project-name {
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .created-at {
+        font-size: 12px;
+    }
+
+    .message {
+        font-size: 13px;
+
+        span.bold {
+            font-weight: 600; 
+        }
+    }
+}
+
+.icon-count-wrapper {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    .count-wrapper {
+        height: 30px;
+        width: 30px;
+        background-color: #A7C2CB;
+        color: #000;
+        border-radius: 50%;
+        margin-right: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        line-height: 1;
+        text-align: center;
+    }
+
+    i {
+        color: #000000;
+        font-size: 20px;
+        cursor: pointer;
+    }
+}
+
+.loading-indicator-wrapper {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+
+    .spinner-wrapper {
+        display: flex;
+        justify-content: space-around;
+        height: 100%;
+        align-items: center;
+    }
+      
+    .spinner {
+        border: 0.2rem solid #8D9CA6;
+        width: 2rem;
+        height: 2rem;
+        border-top-color: #294759;
+        border-left-color: #294759;
+        border-radius: 50%;
+        -webkit-animation: spinner 1s linear 0s infinite;
+        animation: spinner 1s linear 0s infinite;
+    }
+    @keyframes spinner {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+.scroller {
+    margin-bottom: 30px;
+    overflow: auto;
+    height: 100%;
+    position: relative;
+    flex: 1;
+}
+
+.clear-all-btn {
+    background-color: #fff;
+    color: #5c8bad;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 27px;
+    line-height: 27px;
+    text-align: center;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}

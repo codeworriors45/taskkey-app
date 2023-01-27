@@ -1,0 +1,497 @@
+<div class="detail-container row">
+    <left-panel class="col-auto left-panel">
+        <div class="panel-header">
+            <div class="title-wrapper">
+                <div class="title">Tasks</div>
+                <i class="fa fa-plus add-new-btn" (click)="startCreateTask()"></i>
+            </div>
+            <div class="col short-filter-wrapper">
+                <div dropdown [ngClass]="{'sort-applied': sortBy!=''}">
+                    <div class="shorting-wrapper">
+                        <i class="fa fa-sort static-icon" (click)="toogleSortOrder()"></i>
+                        <div dropdownToggle>
+                            <div *ngIf="sortBy=='dueDate' || sortBy==''" class="text-static">Sort: Due Date</div>
+                            <div *ngIf="sortBy=='createdBy'" class="text-static">Sort: Created By</div>
+                            <div *ngIf="sortBy=='status'" class="text-static">Sort: Status</div>
+                            <div *ngIf="sortBy=='name'" class="text-static">Sort: Name</div>
+                        </div>
+                    </div>
+                    <div class="menu-items left dropdown-menu" role="menu" *dropdownMenu>
+                        <div role="menuitem" (click)="sortBy='dueDate';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='dueDate' || sortBy==''}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Due Date</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='createdBy';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='createdBy'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Created By</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='status';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='status'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Status</div>
+                        </div>
+                        <div role="menuitem" (click)="sortBy='name';sortTasks()" class="menu-item" [ngClass]="{'active': sortBy=='name'}">
+                            <div class="icon fa fa-check"></div>
+                            <div class="text">Name</div>
+                        </div>
+                    </div>
+                </div>
+                <div dropdown #filterDropdown="bs-dropdown" [autoClose]="true" [ngClass]="{'filter-applied': filterApplied}">
+                    <div class="filter-icon-wrapper" dropdownToggle (click)="openFiletrDropDown(filterDropdown)">
+                        <i class="fa fa-filter filter-ion"></i>
+                        <div *ngIf="filterApplied" class="filterApplied"></div>
+                    </div>
+                    <div class="filter-popup dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                        <div class="button-wrapper">
+                            <div class="flat-btn" (click)="filterDropdown.hide(); applyFiletrDropDown()">Apply Filter</div>
+                            <div class="flat-btn" (click)="filterDropdown.hide(); resetFilterDropDown()">Reset</div>
+                        </div>
+                        <div class="filter-category-wrapper-outer">
+                            <div class="filter-category-wrapper">
+                                <div class="category-lbl">
+                                    Update Request
+                                </div>
+                                <div class="filter-opt" (click)="toogleUpdateRequestForFilter('active')" [ngClass]="{'applied': taskCallToAction.indexOf('active') != -1}">
+                                    Active
+                                </div>
+                                <div class="filter-opt" (click)="toogleUpdateRequestForFilter('off')" [ngClass]="{'applied': taskCallToAction.indexOf('off') != -1}">
+                                    Off
+                                </div>
+                            </div>
+                            <div class="filter-category-wrapper">
+                                <div class="category-lbl">
+                                    Status
+                                </div>
+                                <div class="filter-opt" (click)="toogleSelectedStatusForFilter('pending')" [ngClass]="{'applied': taskStatusArr.indexOf('pending') != -1}">
+                                    Pending
+                                </div>
+                                <div class="filter-opt" (click)="toogleSelectedStatusForFilter('in-progress')" [ngClass]="{'applied': taskStatusArr.indexOf('in-progress') != -1}">
+                                    In-Progress
+                                </div>
+                                <div class="filter-opt" (click)="toogleSelectedStatusForFilter('overdue')" [ngClass]="{'applied': taskStatusArr.indexOf('overdue') != -1}">
+                                    Overdue
+                                </div>
+                                <div class="filter-opt" (click)="toogleSelectedStatusForFilter('completed')" [ngClass]="{'applied': taskStatusArr.indexOf('completed') != -1}">
+                                    Complete
+                                </div>
+                            </div>
+                            <div class="filter-category-wrapper asigned-to">
+                                <div class="category-lbl">
+                                    Assigned To
+                                </div>
+                                <div *ngFor="let participant of selectedProjectAllParticipants; let i=index" class="filter-opt small" 
+                                    [ngClass]="{'applied': participant.selected}" (click)="participant.selected = !participant.selected">
+                                    <div class="user-info">
+                                        <img appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                                        <!--<img *ngIf="!participant.profileImage" src="assets/images/user{{i%2==0?2:1}}.png">-->
+                                        {{participant.name}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="panel-body" [ngClass]="{'no-item': tasks.length == 0}">
+            <div *ngIf="tasks.length > 0" class="task-list">
+                <div *ngFor="let task of filteredTasks" class="list-item" [ngClass]="{'selected': selectedTask && selectedTask.id==task.id, 'in-progress': task.status=='in-progress', 'overdue': task.status=='overdue', 'completed': task.status=='completed'}">
+                    <div class="section-1">
+                        <div class="due-date-wrapper">
+                            <i *ngIf="task.callToAction" class="fa fa-bell icon"></i>
+                            <div *ngIf="task.dueDate > 0" class="date-text">{{task.dueDate|date:'d MMM'}}</div>
+                            <div *ngIf="task.dueDate === 0" class="date-text">--</div>
+                        </div>
+                        <div class="title" (click)="setSelectedTask(task)">{{task.name}}</div>
+                        <div *ngIf="task.unreadMsg || task.inCompleteTodo" class="notes-to-do-counts">
+                            <div *ngIf="task.unreadMsg" class="counts">
+                                <i class="fa fa-comment icon"></i>
+                                {{task.unreadMsg}}
+                            </div>
+                            <div *ngIf="task.inCompleteTodo" class="counts">
+                                <i class="fa fa-check-circle icon"></i>
+                                {{task.inCompleteTodo}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-2">
+                        <div class="status">{{task.status}}</div>
+                        <div class="suscribers">
+                            <!--<img *ngFor="let participant of task.participants | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">-->
+                            <img *ngFor="let participant of task.participants | slice:0:3; let i=index" appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                            <div *ngIf="task.participants?.length > 3" class="counter">
+                                +{{task.participants.length - 3}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-3" dropdown #operationDropdown="bs-dropdown" [autoClose]="true" container="left-panel" (isOpenChange)="onOperationDropDownOpenChange($event)">
+                        <i class="fa fa-ellipsis-v opt-icon" dropdownToggle></i>
+                        <div #operationDropdownPopup class="operation-dropdown dropdown-menu dropdown-menu-right" role="menu" *dropdownMenu (click)="preventClose($event)">
+                            <div class="title">
+                                {{task.name}}
+                            </div>
+                            <div class="created-by-date">
+                                Created by <span class="name-text">{{task._createdBy}}</span>{{task.timestamp |date:'d MMM YYYY'}}
+                            </div>
+                            <div class="menu-items">
+                                <div *ngIf="!task.completed" role="menuitem" (click)="operationDropdown.hide(); toogleTaskAction(task, 'completed')" class="menu-item">
+                                    <div class="icon far fa-check-circle"></div>
+                                    <div class="text">Mark as Complete</div>
+                                </div>
+                                <div *ngIf="task.completed" role="menuitem" (click)="operationDropdown.hide(); toogleTaskAction(task, 'completed')" class="menu-item">
+                                    <div class="icon far fa-times-circle"></div>
+                                    <div class="text">Unmark Completion</div>
+                                </div>
+                                <div *ngIf="task.callToAction" role="menuitem" (click)="operationDropdown.hide(); toogleTaskAction(task, 'callToAction')" class="menu-item">
+                                    <div class="icon far fa-bell-slash"></div>
+                                    <div class="text">Cancel Update Request</div>
+                                </div>
+                                <div *ngIf="!task.callToAction" role="menuitem" (click)="operationDropdown.hide(); toogleTaskAction(task, 'callToAction')" class="menu-item">
+                                    <div class="icon far fa-bell"></div>
+                                    <div class="text">Request Updates</div>
+                                </div>
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); startEditTask(task)">
+                                    <div class="icon far fa-edit"></div>
+                                    <div class="text">Edit Task</div>
+                                </div>
+                                <div role="menuitem" class="menu-item" (click)="operationDropdown.hide(); deleteTask(task)">
+                                    <div class="icon far fa-trash-alt"></div>
+                                    <div class="text">Delete</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="tasks.length == 0" class="no-item-info-wrapper">
+                <div class="title">No task right now</div>
+                <div class="description">How about we get things moving and create a new task?</div>
+                <button class="cretae-task-btn btn btn-primary" (click)="startCreateTask()">Create Task</button>
+            </div>
+        </div>
+    </left-panel>
+    <div *ngIf="selectedTab==-1" class="col right-panel taskForm">
+        <div class="panel-body row">
+            <div class="col-6 border-right">
+                <div class="form-container">
+                    <form [formGroup]="taskForm">
+                        <div *ngIf="!taskForm.controls['id'].value" class="title">Create Task</div>
+                        <div *ngIf="taskForm.controls['id'].value" class="title">Edit Task</div>
+                        <div class="form-input-wrapper">
+                            <label class="label label-required">Task Name</label>
+                            <input class="input-field" type="text" autocomplete="off" formControlName="name" maxlength="60"/>
+                            <div class="error-cont-info-wrapper">
+                                <div class="errors">
+                                    <div class="error-message" *ngIf="taskForm.controls['name'].invalid && taskForm.controls['name'].touched">
+                                        <span *ngIf="taskForm.controls.name.errors?.required">Task Name is required.</span>
+                                    </div>
+                                </div>
+                                <div class="input-count">{{taskForm.value.name.length}}/60</div>
+                            </div>
+                        </div>
+                        <div class="form-input-wrapper">
+                            <label class="label">Due Date</label>
+                            <i class="far fa-calendar-alt floated-icon float-right" (click)="dp.show()"></i>
+                            <input bsDatepicker class="input-field" type="text" [minDate]="minDate" autocomplete="off" formControlName="dueDate_DB" placeholder="" #dp="bsDatepicker" [bsConfig]="{ dateInputFormat: 'MMM Do YYYY', containerClass: 'theme-default', adaptivePosition: true, showWeekNumbers: false }"/>
+                        </div>
+
+                        <div class="form-input-wrapper">
+                            <label class="label">Description</label>
+                            <textarea class="input-field" rows="3" autocomplete="off" formControlName="description"  maxlength="140"></textarea>
+                            <div class="error-cont-info-wrapper">
+                                <div class="errors">
+                                    
+                                </div>
+                                <div class="input-count">{{taskForm.value.description.length}}/140</div>
+                            </div>
+                        </div>
+                        <label class="form-notes">Required Fields</label>
+                        <div class="clear-both"></div>
+                        <div class="involed-title">Who's Involved?</div>
+                        <div class="task-participants">
+                            <div *ngFor="let participant of (involvedPersonsKey| keyvalue)?.reverse(); let i = index" class="participant">
+                                <img appImgFallback="assets/images/user1.svg" [src]="participant.value.profileImage ? participant.value.profileImage : 'assets/images/user2.png'" />
+                                <i class="fas fa-times-circle remove-icon" (click)="removeParticipant(participant.value.id)"></i>
+                                <div class="name">{{participant.value.name}}</div>
+                                <img *ngIf="participant.value.id==card.createdBy" src="assets/images/tag_admin.svg" class="admin-tag">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-6 searchUser">
+                <div class="search-user-conatiner">
+                    <div class="button-wrapper">
+                        <button type="button" class="btn btn-outline-primary create-task-btn" [disabled]="!formSubmitted && taskForm.invalid" (click)="addOrUpdateTask()">{{!taskForm.controls['id'].value ? 'Save Task' : 'Save Task'}}</button>
+                        <!--<button type="button" class="btn btn-outline-primary create-card-btn">Update Task</button>-->
+                    </div>
+                    <div class="search-title">Add Members</div>
+                    <div class="form-input-wrapper flat-input">
+                        <i class="fas fa-search floated-icon float-left"></i>
+                        <input class="input-field" type="text" autocomplete="off" [(ngModel)]="searchStr" placeholder="Search to invite members" (keyup)="onKeyUp_search($event)" (keydown)="onKeyDown_search()"/>
+                    </div>
+                    <div class="searched-user-list">
+                        <div class="list-scroller">
+                            <div class="user-info" *ngFor="let user of searchedUsersArr; let i = index">
+                                <img appImgFallback="assets/images/user1.svg" [src]="user.profileImage ? user.profileImage : 'assets/images/user2.png'"/>
+                                <img *ngIf="user.admin" src="assets/images/tag_admin.svg" class="admin-tag">
+                                <div class="name-info">
+                                    <div class="name">{{user.name}}</div>
+                                    <div class="type">{{user.admin ? 'Admin':'Member'}} <span *ngIf="user.userId==currentUser.userId">(Me)</span></div>
+                                </div>
+                                <div (click)="addOrRemoveAssignee(user)" class="action-btn" [ngClass]="{'assign':!user.involved, 'cancel':user.involved}">{{user.involved ? 'Cancel': 'Assign'}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div *ngIf="selectedTab!=-1" class="right-panel">
+        <div *ngIf="selectedTask" class="panel-header">
+            <div class="title-wrapper">
+                <div class="title-wrapper-inner"
+                  [ngClass]="{'in-progress': selectedTask.status=='in-progress', 'isStarted': selectedTask.isStarted, 'overdue': selectedTask.status=='overdue', 'completed': selectedTask.status=='completed'}">
+                    <i *ngIf="selectedTask.callToAction" class="fa fa-bell bell-icon"></i>
+                    <div class="title">
+                        {{selectedTask.name}}
+                    </div>
+                    <i class="fa fa-calendar calender-icon"></i>
+                    <div *ngIf="selectedTask.dueDate > 0" class="due-date-text">
+                        {{selectedTask.dueDate |date:'d MMM'}}
+                    </div>
+                    <div *ngIf="selectedTask.dueDate === 0" class="due-date-text">--</div>
+                    <div class="status-wrapper">
+                        <!--<div class="status">
+                            {{selectedTask.status}}
+                        </div>-->
+                        <div *ngIf="selectedTask.status=='pending' || (!selectedTask.isStarted && selectedTask.status=='overdue')" (click)="updateTaskStatus(selectedTask)" [ngClass]="{'overdue': selectedTask.status=='overdue'}" class="status">Start Task</div>
+                        <div *ngIf="selectedTask.status!='pending' && selectedTask.isStarted" (click)="updateTaskStatus(selectedTask)" class="status">{{selectedTask.status}}</div>
+                    </div>
+                </div>
+                <div class="suscribers-bookmark-wrapper">
+                    <div class="suscribers" (click)="showTaskParticipantsPopup(selectedTask)">
+                        <!--<img *ngFor="let participant of selectedTask.participants | slice:0:3; let i=index" src="assets/images/user{{i%2==0?2:1}}.png">-->
+                        <img *ngFor="let participant of selectedTask.participants | slice:0:3; let i=index" appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                        <div *ngIf="selectedTask.participants?.length > 3" class="counter">
+                            +{{selectedTask.participants.length - 3}}
+                        </div>
+                    </div>
+                    <!--<i class="fa fa-bookmark bookmark-icon"></i>-->
+                </div>
+            </div>
+            <div class="task-description">
+                {{selectedTask.description}}
+            </div>
+            <div class="tab-container">
+                <div class="tab-item" (click)="selectedTab=0">
+                    <div class="title">Comments</div>
+                    <div class="custom-bottom-border">
+                        <img *ngIf="selectedTab==0" src="assets/icons/selected-tab-border.svg">
+                    </div>
+                </div>
+                <div class="tab-item" (click)="selectedTab=1">
+                    <div class="title">To-Do<span *ngIf="uncompleteToDoCount">({{uncompleteToDoCount}})</span></div>
+                    <div class="custom-bottom-border">
+                        <img *ngIf="selectedTab==1" src="assets/icons/selected-tab-border.svg">
+                    </div>
+                </div>
+                <div class="tab-item" (click)="selectedTab=2">
+                    <div class="title">Events</div>
+                    <div class="custom-bottom-border">
+                        <img *ngIf="selectedTab==2" src="assets/icons/selected-tab-border.svg">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="selectedTask" class="panel-body">
+            <div class="panel-body-inner">
+                <div *ngIf="selectedTab==0" class="comments-container">
+                    <div class="comments-container-inner" #commentContainers [ngClass]="{'no-item':comments && comments.length == 0}">
+                        <div *ngFor="let comment of comments; let i=index" class="comment-wrapper">
+                            <div class="comment-inner-wrapper">
+                                <!--<img class="user-image" src="assets/images/user1.png">-->
+                                <img class="user-image" appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="comment.uProfileImage">
+                                <div class="comment-info">
+                                    <div class="name-comment">
+                                        <div *ngIf="comment.userName" class="user-name">{{comment.userName}}</div>
+                                        <div *ngIf="!comment.userName" class="user-name">...</div>
+                                        <div *ngIf="comment.commentType==1" class="comment" [innerHTML]="comment.comment"></div>
+                                        <div *ngIf="comment.commentType==2" class="comment" (click)="showFullImage(comment)">
+                                            <img [src]="comment.trustedThumbUrl">
+                                        </div>
+                                        <div *ngIf="comment.commentType==4" class="comment">
+                                            <audio controls [src]="comment.fileUrl">
+                                                Your browser does not support the
+                                                <code>audio</code> element.
+                                            </audio>
+                                        </div>
+                                    </div>
+                                    <div class="date-reply-btn">
+                                        <div class="date">{{comment.timestamp}}</div>
+                                        <div class="reply-btn" (click)="setReplingToUI(comment.id, comment.id, comment.userName, comment.firebaseReplies)">Reply</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="comment.replies.length > 0" class="replies">
+                                <div *ngFor="let reply of comment.replies; let j=index" class="comment-wrapper">
+                                    <div class="comment-inner-wrapper">
+                                        <img class="user-image" appImgFallback="assets/images/user{{j%2==0?2:1}}.png" [src]="reply.uProfileImage">
+                                        <div class="comment-info">
+                                            <div class="name-comment">
+                                                <div *ngIf="reply.userName" class="user-name">{{reply.userName}}</div>
+                                                <div *ngIf="!reply.userName" class="user-name">...</div>
+                                                <!--<div class="comment">
+                                                    <span>@{{reply.parentCommentUsername}}</span><span class="replied-comment" [innerHTML]="reply.comment"></span>
+                                                </div>-->
+                                                <div *ngIf="reply.commentType==1" class="comment">
+                                                    <span>@{{reply.parentCommentUsername}}</span><span class="replied-comment" [innerHTML]="reply.comment"></span>
+                                                </div>
+                                                <div *ngIf="reply.commentType==2" class="comment" (click)="showFullImage(reply)">
+                                                    <span>@{{reply.parentCommentUsername}}</span><img [src]="reply.trustedThumbUrl">
+                                                </div>
+                                                <div *ngIf="comment.commentType==4" class="comment">
+                                                    <span>@{{reply.parentCommentUsername}}</span><audio controls [src]="comment.fileUrl">
+                                                        Your browser does not support the
+                                                        <code>audio</code> element.
+                                                    </audio>
+                                                </div>
+                                            </div>
+                                            <div class="date-reply-btn">
+                                                <div class="date">{{reply.timestamp}}</div>
+                                                <div class="reply-btn" (click)="setReplingToUI(reply.parentCommentId, reply.id, reply.userName, comment.firebaseReplies)">Reply</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="comments && comments.length == 0" [ngClass]="{'no-item': comments && comments.length == 0}">
+                            <div class="no-item-info-wrapper">
+                                <div class="title">No comments yet</div>
+                                <div class="description">Start the conversation by writing a message. Only assigned task members will receive comment notifications!</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-field-wrapper">
+                        <div *ngIf="showParticipantsMention" class="participants-mention-list">
+                            <div *ngIf="selectedTask.participants.length == 0" class="no-participant">
+                                No participant
+                            </div>
+                            <div *ngFor="let participant of selectedTask.participants" (click)="addPArticipantInMentioned_N_ShowNameInComment(participant)" class="participant-list-item">
+                                <img  appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                                <div class="fullName">
+                                    {{participant.fullName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-field-inner">
+                            <i class="far fa-smile smile-icon"></i>
+                            <div *ngIf="replingTo.repliedCommentId" class="replying">@{{replingTo.userName.split(' ')[0]}}</div>
+                            <div *ngIf="!selectedTask.completed" (focus)="setMaxWidth()" [contentEditable]="!selectedTask.completed" (input)="onCommentInputChange($event.target.innerText)" #commentInput class="input-field" rows="1" (keyup)="onKeyUp($event)" (keydown)="onKeyDown($event)" data-placeholder="Write a message..."></div>
+                        </div>
+                        <div class="send-btn" (click)="addComment(selectedTask.projectId, selectedTask.id)">
+                            <i class="fa fa-paper-plane"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedTab==1" class="todos-events-container">
+                    <div *ngIf="toDos.length == 0" [ngClass]="{'no-item':toDos.length == 0}">
+                        <div class="no-item-info-wrapper">
+                            <div class="title">No to-do items now</div>
+                            <div class="description">Break down complex tasks by adding them as To-Do items here!</div>
+                        </div>
+                    </div>
+                    <div *ngIf="toDos.length != 0" class="item-list">
+                        <div *ngFor="let todo of toDos" class="item-wrapper" [ngClass]="{'completed': todo.complete}">
+                            <div class="check-icon-wrapper" (click)="updateToDoStatus(todo)">
+                                <i *ngIf="todo.complete" class="check-icon fas fa-check-circle"></i>
+                            </div>
+                            <div class="text" [innerHTML]="todo.title">
+                            </div>
+                        </div>
+                        <!--<div class="item-wrapper">
+                            <div class="check-icon-wrapper">
+                                <i class="check-icon fas fa-check-circle"></i>
+                            </div>
+                            <div class="text">
+                                Buy candles for the cake
+                            </div>
+                        </div>-->
+                    </div>
+                    <div class="input-field-wrapper">
+                        <div class="input-field-inner">
+                            <i class="far fa-smile smile-icon not"></i>
+                            <!--<input type="text" class="input-field" rows="1" [(ngModel)]="newToDo" (keyup.enter)="addTodo()" placeholder="Add new list item..." />-->
+                            <div [contentEditable]="!selectedTask.completed" (input)="onToDoInputChange($event.target.innerText)" #toDoInput class="input-field" rows="1" (keyup)="onToDoInputKeyUp($event)" (keydown)="onKeyDown($event)" data-placeholder="Add new list item..."></div>
+                            <!--<i class="fas fa-paperclip smile-icon pin not"></i>-->
+                        </div>
+                        <div class="add-btn" (click)="addTodo()">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedTab==2" class="todos-events-container" [ngClass]="{'no-item': events.length == 0}">
+                    <div *ngIf="events.length == 0" class="no-item-info-wrapper">
+                        <div class="title">No task events yet</div>
+                        <div class="description">We'll help you keep track of the going-ons of this task here</div>
+                    </div>
+                    <div *ngIf="events.length != 0" class="item-list events">
+                        <div *ngFor="let event of events" class="item-wrapper">
+                            <div class="type">
+                                {{event.type}}
+                            </div>
+                            <div class="title" [innerHTML]="event.html"></div>
+                            <div *ngIf="event.timestamp" class="created-at">
+                                {{event.timestamp}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<div bsModal #fullImgModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4 id="dialog-child-name" class="modal-title pull-left">Full Image</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideImgModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+      <div class="modal-body">
+        <img [src]="modalImgSrc">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #taskParticipantsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h4 id="dialog-child-name" class="modal-title pull-left">Assigned Members</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="hideTaskParticipantModal()">
+                <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+        <div class="modal-body no-padding" *ngIf="selectedTask">
+            <div class="member-lest-item" *ngFor="let participant of selectedTask.participants; let i=index">
+                <img  appImgFallback="assets/images/user{{i%2==0?2:1}}.png" [src]="participant.profileImage">
+                <div class="fullName">
+                    {{participant.fullName}}
+                </div>
+            </div>
+            
+        </div>
+      </div>
+    </div>
+  </div>

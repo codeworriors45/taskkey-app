@@ -1,0 +1,8 @@
+<svg id="ic_settings_signout" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="Icon_feather-log-out" data-name="Icon feather-log-out" transform="translate(-3 -3)">
+    <path id="Path_3003" data-name="Path 3003" d="M10.167,21.5H6.389A1.889,1.889,0,0,1,4.5,19.611V6.389A1.889,1.889,0,0,1,6.389,4.5h3.778" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_3004" data-name="Path 3004" d="M24,19.944l4.722-4.722L24,10.5" transform="translate(-7.222 -2.222)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_3005" data-name="Path 3005" d="M24.833,18H13.5" transform="translate(-3.333 -5)" fill="none" stroke="#294658" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+  <rect id="Rectangle_1334" data-name="Rectangle 1334" width="20" height="20" fill="none"/>
+</svg>
